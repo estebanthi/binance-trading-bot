@@ -3,7 +3,7 @@ import backtrader as bt
 
 
 @dataclass
-class Strategy:
-    """ Modelizes a strategy and its params"""
-    strategy: bt.Strategy
+class Analyzer:
+    """ Modelizes an analyzer and its params"""
+    analyzer: bt.Analyzer
     parameters: dict
