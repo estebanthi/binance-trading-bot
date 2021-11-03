@@ -6,9 +6,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-params = DatafeedParams(mode="BACKTEST", symbol="BTC/EUR", start_date=dt.datetime.utcnow()-dt.timedelta(hours=10), timeframe=bt.TimeFrame.Minutes,
+params = DatafeedParams(mode="BACKTEST", symbol="BTC/EUR", start_date="2021/11/01 0:0:0", timeframe=bt.TimeFrame.Minutes,
                         compression=1)
 
 generator = DatafeedGenerator(params)
-print(generator.get_file_title())
 print(generator.generate_datafeed())

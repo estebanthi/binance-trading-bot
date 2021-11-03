@@ -19,6 +19,10 @@ class DatafeedGenerator:
 
     def __init__(self, datafeed_params):
         self.p = datafeed_params
+        if type(self.p.start_date) == str:
+            self.p.start_date = dt.datetime.strptime(self.p.start_date, "%Y/%m/%d %H:%M:%S")
+        if type(self.p.end_date) == str:
+            self.p.end_date = dt.datetime.strptime(self.p.end_date, "%Y/%m/%d %H:%M:%S")
 
     def generate_datafeed(self):
         if self.p.mode == "BACKTEST":
