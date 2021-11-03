@@ -1,12 +1,13 @@
-from models.Datafeed.DatafeedParams import DatafeedParams as DatafeedParams
+from models.Datafeeds.DatafeedParams import DatafeedParams as DatafeedParams
 import datetime as dt
 import backtrader as bt
-from models.Datafeed.DatafeedGenerator import DatafeedGenerator as DatafeedGenerator
+from models.Datafeeds.DatafeedGenerator import DatafeedGenerator as DatafeedGenerator
 import warnings
 warnings.filterwarnings("ignore")
 
 
-params = DatafeedParams(mode="BACKTEST", symbol="BTC/EUR", start_date="2021/11/01 0:0:0", timeframe=bt.TimeFrame.Minutes,
+params = DatafeedParams(mode="PAPER", symbol="BTC/EUR", timedelta=dt.timedelta(hours=100), timeframe=bt.TimeFrame.Minutes,
+
                         compression=1)
 
 generator = DatafeedGenerator(params)

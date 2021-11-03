@@ -8,8 +8,9 @@ class DatafeedParams:
     """ Class to modelize datafeed options"""
     mode: str
     symbol: str
-    start_date: dt.datetime
     timeframe: bt.TimeFrame
     end_date: dt.datetime = dt.datetime.utcnow()
+    start_date: dt.datetime = None
     compression: int = 1
     timedelta: dt.timedelta = None
+    debug: bool = False
