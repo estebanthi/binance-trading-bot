@@ -1,10 +1,12 @@
 import backtrader as bt
 import os
-from models.Datafeed.CustomOHLC import CustomOHLC as CustomOHLC
+from models.Datafeeds.CustomOHLC import CustomOHLC as CustomOHLC
 import yaml
 from binance import Client
 import pandas as pd
 import datetime as dt
+from ccxtbt import CCXTStore
+import time
 
 # Useful to format timeframe and compression
 timeframes_mapper = {
@@ -19,10 +21,15 @@ class DatafeedGenerator:
 
     def __init__(self, datafeed_params):
         self.p = datafeed_params
+        if self.p.timedelta:
+            self.p.start_date = self.p.end_date - self.p.timedelta
 
     def generate_datafeed(self):
+        datafeed = None
         if self.p.mode == "BACKTEST":
             datafeed = self.generate_backtesting_datafeed()
+        if self.p.mode != "BACKTEST":  # PAPER or REAL
+            datafeed = self.generate_live_datafeed()
         return datafeed
 
     def generate_backtesting_datafeed(self):
@@ -36,6 +43,28 @@ class DatafeedGenerator:
             klines_formatted.to_csv(f"data/datasets/{title}")
 
         return CustomOHLC(dataname=title, timeframe=self.p.timeframe, compression=self.p.compression)
+
+    def generate_live_datafeed(self):
+        """ Explicit """
+
+        with open("config.yml") as file:
+            data = yaml.safe_load(file)
+        key, secret = data["api_key"], data["api_secret"]
+
+        # Broker config
+        broker_config = {
+            'apiKey': key,
+            'secret': secret,
+            'nonce': lambda: str(int(time.time() * 1000)),
+            'enableRateLimit': True,
+        }
+
+        # Getting store
+        store = CCXTStore(exchange='binance', currency=None, config=broker_config, retries=5,
+                          debug=self.p.debug)
+
+        return store.getdata(dataname=self.p.symbol, name=self.p.symbol, timeframe=self.p.timeframe,
+                             fromdate=self.p.start_date, compression=self.p.compression, ohlcv_limit=99999)
 
     def get_file_title(self):
         """ Find the title associated to params """
