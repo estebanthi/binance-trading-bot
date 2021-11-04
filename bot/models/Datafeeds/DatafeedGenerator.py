@@ -21,6 +21,12 @@ class DatafeedGenerator:
 
     def __init__(self, datafeed_params):
         self.p = datafeed_params
+
+        if type(self.p.start_date) == str:
+            self.p.start_date = dt.datetime.strptime(self.p.start_date, "%Y/%m/%d %H:%M:%S")
+        if type(self.p.end_date) == str:
+            self.p.end_date = dt.datetime.strptime(self.p.end_date, "%Y/%m/%d %H:%M:%S")
+
         if self.p.timedelta:
             self.p.start_date = self.p.end_date - self.p.timedelta
 
@@ -42,7 +48,7 @@ class DatafeedGenerator:
             klines_formatted = format_klines(klines)
             klines_formatted.to_csv(f"data/datasets/{title}")
 
-        return CustomOHLC(dataname=title, timeframe=self.p.timeframe, compression=self.p.compression)
+        return CustomOHLC(dataname=f"data/datasets/{title}", timeframe=self.p.timeframe, compression=self.p.compression)
 
     def generate_live_datafeed(self):
         """ Explicit """

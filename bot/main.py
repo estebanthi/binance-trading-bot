@@ -13,8 +13,9 @@ warnings.filterwarnings("ignore")
 
 strategy = Strategy(bt.strategies.MA_CrossOver, {})
 engine = Engine()
-config = EngineConfiguration(symbol="BTC/EUR", mode="BACKTEST", start_date="2021/10/01 0:0:0", timeframe=bt.TimeFrame.Minutes, compression=240, strategy=strategy)
+config = EngineConfiguration(symbol="BTC/EUR", mode="LIVE", start_date="2021/10/01 0:0:0", timeframe=bt.TimeFrame.Minutes, compression=60, strategy=strategy,debug=True)
 engine.set_configuration(config)
 
-print(engine.run())
+result = engine.run()
+print(result)
 
