@@ -23,7 +23,7 @@ class EngineConfiguration:
     analyzers: list = field(default_factory=list)
     cash: float = 100_000
     commission: float = 0.2
-    kwargs: dict = None
+    kwargs: dict = field(default_factory=dict)
     currency: str = None
 
 
