@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from models.Strategies.Strategy import Strategy as Strategy
-from models.Strategies.StrategySkeleton import SimpleStrat as Strat
+from models.Strategies.SimpleStratSkeleton import SimpleStratSkeleton as SimpleStratSkeleton
 import backtrader as bt
 from dataclasses import field
 
 
-class Core(Strat):
+class Core(SimpleStratSkeleton):
     params = (
         ('fastestperiod', 20),
         ('middleperiod', 50),
@@ -40,8 +40,12 @@ class Core(Strat):
 
 @dataclass
 class TripleEMA(Strategy):
-    strategy: Core = Core
-    parameters: dict = field(default_factory=dict)
+
+    def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled, shorts_enabled=Core.params.shorts_enabled,
+                 fastestperiod=Core.params.fastestperiod, middleperiod=Core.params.middleperiod, slowestperiod=Core.params.slowestperiod):
+        self.strategy = Core
+        self.parameters = {"logging":logging, "longs_enabled":longs_enabled, "shorts_enabled":shorts_enabled,
+                           "fastestperiod":fastestperiod, "middleperiod":middleperiod, "slowestperiod":slowestperiod}
 
 
 
