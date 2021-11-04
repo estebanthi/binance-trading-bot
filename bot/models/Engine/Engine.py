@@ -43,7 +43,7 @@ class Engine:
             self.resample_datafeed(datafeed)
 
         if self.config.mode == "BACKTEST":
-            return self.cerebro.run(maxcpus=1, optreturn = False, **self.config.kwargs), self.cerebro
+            return self.cerebro.run(maxcpus=1, optreturn = False, **self.config.kwargs)
         return self.cerebro.run(**self.config.kwargs)
 
 
@@ -79,3 +79,6 @@ class Engine:
     def resample_datafeed(self, datafeed):
         for timeframe in self.config.strategy.parameters["timeframes"]:
             self.cerebro.resampledata(datafeed, timeframe=timeframe[0], compression=timeframe[1])
+
+    def plot(self):
+        self.cerebro.plot()
