@@ -20,9 +20,7 @@ config = EngineConfiguration(symbol="BTC/EUR", mode="BACKTEST", start_date="2021
                              compression=60, strategy=strategy,debug=True, analyzers=analyzers)
 engine.set_configuration(config)
 
-result = engine.run()
+result, cerebro = engine.run()
 
-result_analyzer = ResultAnalyzer(result)
-print(result_analyzer.get_pnls())
-
+cerebro.plot()
 

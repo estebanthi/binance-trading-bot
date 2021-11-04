@@ -43,7 +43,7 @@ class Engine:
             self.resample_datafeed(datafeed)
 
         if self.config.mode == "BACKTEST":
-            return self.cerebro.run(maxcpus=1, optreturn = False, **self.config.kwargs)
+            return self.cerebro.run(maxcpus=1, optreturn = False, **self.config.kwargs), self.cerebro
         return self.cerebro.run(**self.config.kwargs)
 
 
