@@ -17904,13 +17904,30 @@
 											"height": 13,
 											"text": "+run()",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAF8653vTflCZLY=",
+											"_parent": {
+												"$ref": "AAAAAAF85+kwA1EX2vg="
+											},
+											"model": {
+												"$ref": "AAAAAAF8653vQPk/xdk="
+											},
+											"font": "Arial;13;0",
+											"left": 677,
+											"top": 316,
+											"width": 199,
+											"height": 13,
+											"text": "+plot()",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 672,
 									"top": 296,
 									"width": 209,
-									"height": 23
+									"height": 38
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -18144,6 +18161,14 @@
 								"$ref": "AAAAAAF85+kwAlEOmGE="
 							},
 							"name": "run"
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAF8653vQPk/xdk=",
+							"_parent": {
+								"$ref": "AAAAAAF85+kwAlEOmGE="
+							},
+							"name": "plot"
 						}
 					]
 				}

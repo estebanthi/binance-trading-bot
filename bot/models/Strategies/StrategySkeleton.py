@@ -1,5 +1,6 @@
 import backtrader as bt
 from termcolor import colored
+import datetime as dt
 
 
 class StrategySkeleton(bt.Strategy):
@@ -9,6 +10,13 @@ class StrategySkeleton(bt.Strategy):
         ('longs_enabled', True),
         ('shorts_enabled', True),
     )
+
+    def notify_data(self, data, status, *args, **kwargs):
+        self.status = data._getstatusname(status)
+        if status == data.LIVE:
+            self.log("LIVE DATA - Ready to trade")
+        else:
+            print(dt.datetime.now().strftime("%d-%m-%y %H:%M"), "NOT LIVE - %s" % self.status)
 
     def log(self, txt, dt=None):
         """ Logging method """
@@ -37,3 +45,5 @@ class StrategySkeleton(bt.Strategy):
         return False
     def close_short(self):
         return False
+    def get_values(self):
+        return

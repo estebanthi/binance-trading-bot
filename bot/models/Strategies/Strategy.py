@@ -4,6 +4,10 @@ import backtrader as bt
 
 @dataclass
 class Strategy:
-    """ Modelizes a strategy and its params"""
     strategy: bt.Strategy
     parameters: dict
+
+    def remove_self(self):
+        del self.parameters["self"]
+
+

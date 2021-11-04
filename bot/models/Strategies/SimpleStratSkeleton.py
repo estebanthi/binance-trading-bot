@@ -36,7 +36,7 @@ class SimpleStratSkeleton(StrategySkeleton):
 
     def next(self):
         self.log(f"Close, {self.datas[0].close[0]}")
-        print(self.position.size)
+        self.get_values()
 
         if self.order:
             return

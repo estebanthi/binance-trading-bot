@@ -44,8 +44,8 @@ class TripleEMA(Strategy):
     def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled, shorts_enabled=Core.params.shorts_enabled,
                  fastestperiod=Core.params.fastestperiod, middleperiod=Core.params.middleperiod, slowestperiod=Core.params.slowestperiod):
         self.strategy = Core
-        self.parameters = {"logging":logging, "longs_enabled":longs_enabled, "shorts_enabled":shorts_enabled,
-                           "fastestperiod":fastestperiod, "middleperiod":middleperiod, "slowestperiod":slowestperiod}
+        self.parameters = locals()
+        self.remove_self()
 
 
 

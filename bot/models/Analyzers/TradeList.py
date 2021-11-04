@@ -101,5 +101,6 @@ class Core(bt.Analyzer):
 
 @dataclass
 class TradeList:
+    """ Print infos in tradelist format """
     analyzer: Core = Core
     parameters: dict = field(default_factory=lambda:{'_name':"trade_list"})
