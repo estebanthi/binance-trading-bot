@@ -156,5 +156,7 @@ class Core(bt.Analyzer):
 
 @dataclass
 class PercentGetter:
-    analyzer: Core = Core
-    parameters: dict = field(default_factory=lambda:{'_name':"percent_getter"})
+
+    def __init__(self, multiplier=Core.params.multiplier):
+        self.analyzer = Core
+        self.parameters = {"multiplier":multiplier, "_name":"percent_getter"}
