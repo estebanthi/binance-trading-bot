@@ -62,7 +62,7 @@ class Engine:
         """ Configure cerebro's broker """
         if self.config.mode == "BACKTEST":
             self.cerebro.broker.setcash(self.config.cash)
-            self.cerebro.broker.setcommission(self.config.commission)
+            self.cerebro.broker.setcommission(self.config.commission/100)
         else:  # Generate a broker from the exchange
             key, secret = get_secrets()
             broker_config = {
