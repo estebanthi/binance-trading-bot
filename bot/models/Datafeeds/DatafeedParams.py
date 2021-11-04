@@ -9,8 +9,8 @@ class DatafeedParams:
     mode: str
     symbol: str
     timeframe: bt.TimeFrame
-    end_date: dt.datetime = dt.datetime.utcnow()
-    start_date: dt.datetime = None
+    end_date: dt.datetime or str = dt.datetime.utcnow()
+    start_date: dt.datetime or str = None
     compression: int = 1
     timedelta: dt.timedelta = None
     debug: bool = False
