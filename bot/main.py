@@ -17,7 +17,7 @@ analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 engine = Engine()
 config = EngineConfiguration(symbol="BTC/EUR", mode="BACKTEST", start_date="2021/01/01 0:0:0", end_date="2021/11/04 0:0:0", timeframe=bt.TimeFrame.Minutes,
                              compression=60, strategy=strategy,debug=True, analyzers=analyzers,
-                             kwargs={"mode":"PAPER"})
+                             )
 engine.set_configuration(config)
 
 result = engine.run()
