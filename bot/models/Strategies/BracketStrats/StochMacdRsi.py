@@ -41,7 +41,6 @@ class Core(BracketStratSkeleton):
         info = self.broker.getcommissioninfo(self.datas[0])
 
     def get_long(self):
-        print(self.fractals[0])
         if self.rsi[0] > 50 and self.previous_stoch_oversell > self.previous_stoch_overbought \
                 and self.previous_macd_cross_up > self.previous_stoch_overbought:
             return True
