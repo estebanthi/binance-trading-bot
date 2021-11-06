@@ -10,6 +10,7 @@ class BracketStratSkeleton(StrategySkeleton):
     )
 
     def __init__(self):
+        super().__init__()
         self.orefs = list()
 
 

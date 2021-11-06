@@ -6,6 +6,7 @@ class SimpleStratSkeleton(StrategySkeleton):
     """ Modelizes a simple strategy without stop loss or take profit """
 
     def __init__(self):
+        super().__init__()
         self.order = None
 
     def notify_order(self, order):

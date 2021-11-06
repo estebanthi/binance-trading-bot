@@ -12,12 +12,12 @@ import datetime as dt
 warnings.filterwarnings("ignore")
 
 
-strategy = StochMacdRsi()
+strategy = StochMacdRsi(logging=True)
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 
 engine = Engine()
-config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(days=10), timeframe=bt.TimeFrame.Minutes,
-                             compression=60, strategy=strategy,debug=True, analyzers=analyzers, currency="EUR"
+config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(days=1), timeframe=bt.TimeFrame.Minutes,
+                             compression=1, strategy=strategy,debug=False, analyzers=analyzers, currency="EUR"
                              )
 engine.set_configuration(config)
 

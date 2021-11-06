@@ -11,6 +11,9 @@ class StrategySkeleton(bt.Strategy):
         ('shorts_enabled', True),
     )
 
+    def __init__(self):
+        self.total_profit = 0
+
     def notify_data(self, data, status, *args, **kwargs):
         self.status = data._getstatusname(status)
         if status == data.LIVE:
@@ -28,13 +31,12 @@ class StrategySkeleton(bt.Strategy):
         """ Enabled everytime a trade is finished """
         if not trade.isclosed:
             return
-        color = None
-        if trade.pnl > 0:
-            color = "green"
-        else:
-            color = "red"
+        color = "green" if trade.pnlcomm > 0 else "red"
         self.log(colored('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
                  (trade.pnl, trade.pnlcomm), color))
+        self.total_profit += trade.pnlcomm
+        color = "green" if self.total_profit > 0 else "red"
+        self.log(colored("TOTAL PROFIT : %.2f" % self.total_profit, color))
 
     """ Generic strategies methods """
     def get_long(self):
