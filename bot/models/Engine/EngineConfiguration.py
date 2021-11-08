@@ -25,6 +25,9 @@ class EngineConfiguration:
     commission: float = 0.2
     kwargs: dict = field(default_factory=dict)
     currency: str = None
+    write_to: str = None
+    stdstats: bool = True
+    observers: list = field(default_factory=list)
 
 
 

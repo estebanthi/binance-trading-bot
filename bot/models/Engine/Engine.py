@@ -32,8 +32,12 @@ class Engine:
         datafeed = self.generate_datafeed()
         self.cerebro.adddata(datafeed)
 
+        if self.config.write_to:
+            self.cerebro.addwriter(bt.WriterFile, out="data/backtesting_results/"+self.config.write_to)
         for analyzer in self.config.analyzers:
             self.cerebro.addanalyzer(analyzer.analyzer, **analyzer.parameters)
+        for observer in self.config.observers:
+            self.cerebro.addobserver(observer.observer, **observer.parameters)
         self.cerebro.addsizer(self.config.sizer.sizer, **self.config.sizer.parameters)
         if self.config.mode == "BACKTEST":
             self.cerebro.optstrategy(self.config.strategy.strategy, **self.config.strategy.parameters)
@@ -44,8 +48,9 @@ class Engine:
             self.resample_datafeed(datafeed)
 
         if self.config.mode == "BACKTEST":
-            return self.cerebro.run(maxcpus=1, optreturn = False, mode=self.config.mode, **self.config.kwargs)
-        return self.cerebro.run(mode=self.config.mode, **self.config.kwargs)
+            return self.cerebro.run(maxcpus=1, optreturn = False, mode=self.config.mode, stdstats=self.config.stdstats,
+                                    **self.config.kwargs)
+        return self.cerebro.run(mode=self.config.mode, stdstats=self.config.stdstats, **self.config.kwargs)
 
 
 
@@ -82,4 +87,4 @@ class Engine:
             self.cerebro.resampledata(datafeed, timeframe=timeframe[0], compression=timeframe[1])
 
     def plot(self):
-        self.cerebro.plot()
+        self.cerebro.plot(style='candlestick')
