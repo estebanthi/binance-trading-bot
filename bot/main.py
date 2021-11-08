@@ -12,14 +12,14 @@ from models.Observers.Value import Value as ValueObserver
 
 warnings.filterwarnings("ignore")
 
-strategy = StochMacdRsi(logging=True)
+strategy = StochMacdRsi(logging=True, recurring_recap=dt.timedelta(minutes=240))
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 
 engine = Engine()
 config = EngineConfiguration(symbol="BTC/EUR", mode="BACKTEST", timedelta=dt.timedelta(days=1),
                              timeframe=bt.TimeFrame.Minutes,
                              compression=1, strategy=strategy, debug=False, analyzers=analyzers, currency="EUR",
-                             write_to=None, stdstats=False, observers=[ValueObserver()]
+                             write_to="recap.txt", stdstats=False, observers=[ValueObserver()]
                              )
 engine.set_configuration(config)
 

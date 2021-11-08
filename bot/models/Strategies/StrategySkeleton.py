@@ -1,6 +1,8 @@
 import backtrader as bt
 from termcolor import colored
 import datetime as dt
+from backtrader.utils import AutoOrderedDict
+from termcolor import colored
 
 
 class StrategySkeleton(bt.Strategy):
@@ -9,10 +11,14 @@ class StrategySkeleton(bt.Strategy):
         ('logging', False),
         ('longs_enabled', True),
         ('shorts_enabled', True),
+        ('recurring_recap', dt.timedelta(minutes=60)),
     )
 
     def __init__(self):
         self.total_profit = 0
+
+        self.add_timer(when=bt.timer.SESSION_START, repeat=self.p.recurring_recap, timername="recurring_recap")
+        self.memorized_recap = None
 
     def notify_data(self, data, status, *args, **kwargs):
         self.status = data._getstatusname(status)
@@ -33,19 +39,51 @@ class StrategySkeleton(bt.Strategy):
             return
         color = "green" if trade.pnlcomm > 0 else "red"
         self.log(colored('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
-                 (trade.pnl, trade.pnlcomm), color))
+                         (trade.pnl, trade.pnlcomm), color))
         self.total_profit += trade.pnlcomm
         color = "green" if self.total_profit > 0 else "red"
         self.log(colored("TOTAL PROFIT : %.2f" % self.total_profit, color))
 
     """ Generic strategies methods """
+
     def get_long(self):
         return False
+
     def get_short(self):
         return False
+
     def close_long(self):
         return False
+
     def close_short(self):
         return False
+
     def get_values(self):
         return
+
+    def notify_timer(self, timer, when, **kwargs):
+        timername = kwargs.get("timername", None)
+
+        if timername == "recurring_recap":
+            if "trade_analyzer" in dir(self.analyzers):
+                analysis_result = self.analyzers.trade_analyzer.get_analysis()
+                self.format_recap(analysis_result, self.memorized_recap)
+                self.memorized_recap = dict(analysis_result)
+
+    def format_recap(self, analysis, memorized):
+        print(colored("------- RECURRING RECAP -------", "cyan"))
+        for k1, v1 in analysis.items():
+            if type(v1) == AutoOrderedDict:
+                for k2, v2 in v1.items():
+                    if type(v2) == AutoOrderedDict:
+                        for k3, v3 in v2.items():
+                            if type(v3) == AutoOrderedDict:
+                                for k4, v4 in v3.items():
+                                    print(f"{k1}/{k2}/{k3}/{k4} : {v4}")
+                            else:
+                                print(f"{k1}/{k2}/{k3} : {v3}")
+                    else:
+                        print(f"{k1}/{k2} : {v2}")
+            else:
+                print(f"{k1} : {v1}")
+        print(colored("------- END -------", "cyan"))

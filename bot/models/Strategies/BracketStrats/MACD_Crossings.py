@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from models.Strategies.Strategy import Strategy as Strategy
 
 
-class Core(BracketStratSkeleton):
+class MACD_Crossings_strat(BracketStratSkeleton):
     params = (
         ('period_me1', 12),
         ('period_me2', 26),
@@ -35,10 +35,10 @@ class Core(BracketStratSkeleton):
 @dataclass
 class MACD_Crossings(Strategy):
 
-    def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled, shorts_enabled=Core.params.shorts_enabled,
-                 stop_loss=Core.params.stop_loss, risk_reward_ratio=Core.params.risk_reward_ratio,
-                 period_me1=Core.params.period_me1, period_me2=Core.params.period_me2, period_signal=Core.params.period_signal,
-                 trend_ema_period=Core.params.trend_ema_period, movav=Core.params.movav):
-        self.strategy = Core
+    def __init__(self, recurring_recap=MACD_Crossings_strat.params.recurring_recap, logging=MACD_Crossings_strat.params.logging, longs_enabled=MACD_Crossings_strat.params.longs_enabled, shorts_enabled=MACD_Crossings_strat.params.shorts_enabled,
+                 stop_loss=MACD_Crossings_strat.params.stop_loss, risk_reward_ratio=MACD_Crossings_strat.params.risk_reward_ratio,
+                 period_me1=MACD_Crossings_strat.params.period_me1, period_me2=MACD_Crossings_strat.params.period_me2, period_signal=MACD_Crossings_strat.params.period_signal,
+                 trend_ema_period=MACD_Crossings_strat.params.trend_ema_period, movav=MACD_Crossings_strat.params.movav):
+        self.strategy = MACD_Crossings_strat
         self.parameters = locals()
         self.remove_self()

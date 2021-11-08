@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from models.Strategies.Strategy import Strategy as Strategy
 
 
-class Core(BracketStratSkeleton):
+class WT_MFI_strat(BracketStratSkeleton):
     params = (
         ('pullbacks_period', 10),
     )
@@ -49,10 +49,10 @@ class Core(BracketStratSkeleton):
 @dataclass
 class WT_MFI(Strategy):
 
-    def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled,
-                 shorts_enabled=Core.params.shorts_enabled,
-                 stop_loss=Core.params.stop_loss, risk_reward_ratio=Core.params.risk_reward_ratio,
-                 pullbacks_period=Core.params.pullbacks_period):
-        self.strategy = Core
+    def __init__(self, recurring_recap=WT_MFI_strat.params.recurring_recap, logging=WT_MFI_strat.params.logging, longs_enabled=WT_MFI_strat.params.longs_enabled,
+                 shorts_enabled=WT_MFI_strat.params.shorts_enabled,
+                 stop_loss=WT_MFI_strat.params.stop_loss, risk_reward_ratio=WT_MFI_strat.params.risk_reward_ratio,
+                 pullbacks_period=WT_MFI_strat.params.pullbacks_period):
+        self.strategy = WT_MFI_strat
         self.parameters = locals()
         self.remove_self()

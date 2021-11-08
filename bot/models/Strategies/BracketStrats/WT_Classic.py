@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from models.Strategies.Strategy import Strategy as Strategy
 
 
-class Core(BracketStratSkeleton):
+class WT_Classic_strat(BracketStratSkeleton):
     params = (
         ('channel_len_wt', 9),
         ('average_len_wt', 12),
@@ -31,10 +31,10 @@ class Core(BracketStratSkeleton):
 @dataclass
 class WT_Classic(Strategy):
 
-    def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled, shorts_enabled=Core.params.shorts_enabled,
-                 stop_loss=Core.params.stop_loss, risk_reward_ratio=Core.params.risk_reward_ratio,
-                 channel_len_wt=Core.params.channel_len_wt, average_len_wt=Core.params.average_len_wt, ma_len_wt=Core.params.ma_len_wt,
-                 os_level_wt=Core.params.os_level_wt, ob_level_wt=Core.params.ob_level_wt):
-        self.strategy = Core
+    def __init__(self, recurring_recap=WT_Classic_strat.params.recurring_recap, logging=WT_Classic_strat.params.logging, longs_enabled=WT_Classic_strat.params.longs_enabled, shorts_enabled=WT_Classic_strat.params.shorts_enabled,
+                 stop_loss=WT_Classic_strat.params.stop_loss, risk_reward_ratio=WT_Classic_strat.params.risk_reward_ratio,
+                 channel_len_wt=WT_Classic_strat.params.channel_len_wt, average_len_wt=WT_Classic_strat.params.average_len_wt, ma_len_wt=WT_Classic_strat.params.ma_len_wt,
+                 os_level_wt=WT_Classic_strat.params.os_level_wt, ob_level_wt=WT_Classic_strat.params.ob_level_wt):
+        self.strategy = WT_Classic_strat
         self.parameters = locals()
         self.remove_self()

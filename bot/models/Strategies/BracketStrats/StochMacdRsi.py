@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from models.Strategies.Strategy import Strategy as Strategy
 
 
-class Core(BracketStratSkeleton):
+class StochMacdRsi_strat(BracketStratSkeleton):
     params = (
         ('period_me1', 12),
         ('period_me2', 26),
@@ -108,13 +108,13 @@ class Core(BracketStratSkeleton):
 @dataclass
 class StochMacdRsi(Strategy):
 
-    def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled, shorts_enabled=Core.params.shorts_enabled,
-                 stop_loss=Core.params.stop_loss, risk_reward_ratio=Core.params.risk_reward_ratio,
-                 period_me1=Core.params.period_me1, period_me2=Core.params.period_me2, period_signal=Core.params.period_signal,
-                 movav_macd=Core.params.movav_macd, period_rsi=Core.params.period_rsi, movav_rsi=Core.params.movav_rsi,
-                 period_stoch=Core.params.period_stoch, period_dfast=Core.params.period_dfast, period_dslow=Core.params.period_dslow,
-                 movav_stoch=Core.params.movav_stoch, upperband_stoch=Core.params.upperband_stoch, lowerband_stoch=Core.params.lowerband_stoch,
-                 stop_loss_limit=Core.params.stop_loss_limit):
-        self.strategy = Core
+    def __init__(self, recurring_recap=StochMacdRsi_strat.params.recurring_recap, logging=StochMacdRsi_strat.params.logging, longs_enabled=StochMacdRsi_strat.params.longs_enabled, shorts_enabled=StochMacdRsi_strat.params.shorts_enabled,
+                 stop_loss=StochMacdRsi_strat.params.stop_loss, risk_reward_ratio=StochMacdRsi_strat.params.risk_reward_ratio,
+                 period_me1=StochMacdRsi_strat.params.period_me1, period_me2=StochMacdRsi_strat.params.period_me2, period_signal=StochMacdRsi_strat.params.period_signal,
+                 movav_macd=StochMacdRsi_strat.params.movav_macd, period_rsi=StochMacdRsi_strat.params.period_rsi, movav_rsi=StochMacdRsi_strat.params.movav_rsi,
+                 period_stoch=StochMacdRsi_strat.params.period_stoch, period_dfast=StochMacdRsi_strat.params.period_dfast, period_dslow=StochMacdRsi_strat.params.period_dslow,
+                 movav_stoch=StochMacdRsi_strat.params.movav_stoch, upperband_stoch=StochMacdRsi_strat.params.upperband_stoch, lowerband_stoch=StochMacdRsi_strat.params.lowerband_stoch,
+                 stop_loss_limit=StochMacdRsi_strat.params.stop_loss_limit):
+        self.strategy = StochMacdRsi_strat
         self.parameters = locals()
         self.remove_self()
