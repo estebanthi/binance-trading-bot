@@ -7,6 +7,7 @@ import time
 from ccxtbt import CCXTStore
 from models.Engine.EngineCerebro import EngineCerebro as EngineCerebro
 import datetime as dt
+from models.Timers.StopSession import StopSession as StopSession
 
 
 def get_secrets(path='config.yml'):
@@ -33,13 +34,23 @@ class Engine:
         datafeed = self.generate_datafeed()
         self.cerebro.adddata(datafeed)
 
+        # Writer
         if self.config.write_to:
             self.cerebro.addwriter(bt.WriterFile, out="data/backtesting_results/"+self.config.write_to)
+        # Analyzers
         for analyzer in self.config.analyzers:
             self.cerebro.addanalyzer(analyzer.analyzer, **analyzer.parameters)
+        # Observers
         for observer in self.config.observers:
             self.cerebro.addobserver(observer.observer, **observer.parameters)
+        # Sizer
         self.cerebro.addsizer(self.config.sizer.sizer, **self.config.sizer.parameters)
+        # Timers
+        for timer in self.config.timers:
+            stop_session = StopSession()
+            self.cerebro.add_timer(timername=timer.timername, function=timer.function,
+                                   **timer.parameters)
+
         if self.config.mode == "BACKTEST":
             self.cerebro.optstrategy(self.config.strategy.strategy, **self.config.strategy.parameters)
         else:
@@ -47,6 +58,13 @@ class Engine:
 
         if "timeframes" in self.config.strategy.parameters:
             self.resample_datafeed(datafeed)
+
+        if self.config.stop_timer_timedelta:
+            if self.config.start_date:
+                stop_timer = dt.datetime.now() - self.config.start_date() + self.config.stop_timer_timedelta
+            elif self.config.timedelta:
+                stop_timer = self.config.timedelta + self.config.stop_timer_timedelta
+
 
         if self.config.mode == "BACKTEST":
             return self.cerebro.run(maxcpus=1, optreturn = False, mode=self.config.mode, stdstats=self.config.stdstats,

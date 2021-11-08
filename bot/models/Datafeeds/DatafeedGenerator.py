@@ -70,7 +70,8 @@ class DatafeedGenerator:
                           debug=self.p.debug)
 
         return store.getdata(dataname=self.p.symbol, name=self.p.symbol, timeframe=self.p.timeframe,
-                             fromdate=self.p.start_date, compression=self.p.compression, ohlcv_limit=99999)
+                             fromdate=self.p.start_date, compression=self.p.compression, ohlcv_limit=99999,
+                             sessionstart=self.p.start_date)
 
     def get_file_title(self):
         """ Find the title associated to params """
