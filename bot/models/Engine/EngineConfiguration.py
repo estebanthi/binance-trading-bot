@@ -13,7 +13,6 @@ class EngineConfiguration:
     mode: str
     symbol: str
     timeframe: bt.TimeFrame
-    strategy: Strategy
     sizer: Sizer = DefaultSizer()
     end_date: dt.datetime or str = dt.datetime.utcnow()
     start_date: dt.datetime or str = None
@@ -30,6 +29,6 @@ class EngineConfiguration:
     observers: list = field(default_factory=list)
     stop_timer_timedelta: dt.timedelta = None
     timers: list = field(default_factory=list)
-
+    strategies: list = field(default_factory=list)
 
 

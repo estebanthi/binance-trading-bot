@@ -36,7 +36,7 @@ class Engine:
 
         # Writer
         if self.config.write_to:
-            self.cerebro.addwriter(bt.WriterFile, out="data/backtesting_results/"+self.config.write_to)
+            self.cerebro.addwriter(bt.WriterFile, out="data/backtesting_results/" + self.config.write_to)
         # Analyzers
         for analyzer in self.config.analyzers:
             self.cerebro.addanalyzer(analyzer.analyzer, **analyzer.parameters)
@@ -51,13 +51,13 @@ class Engine:
             self.cerebro.add_timer(timername=timer.timername, function=timer.function,
                                    **timer.parameters)
 
-        if self.config.mode == "BACKTEST":
-            self.cerebro.optstrategy(self.config.strategy.strategy, **self.config.strategy.parameters)
-        else:
-            self.cerebro.addstrategy(self.config.strategy.strategy, **self.config.strategy.parameters)
+        for strategy in self.config.strategies:
+            if self.config.mode == "BACKTEST":
+                self.cerebro.optstrategy(strategy.strategy, **strategy.parameters)
+            else:
+                self.cerebro.addstrategy(strategy.strategy, **strategy.parameters)
 
-        if "timeframes" in self.config.strategy.parameters:
-            self.resample_datafeed(datafeed)
+        self.resample_datafeed(datafeed)
 
         if self.config.stop_timer_timedelta:
             if self.config.start_date:
@@ -65,13 +65,10 @@ class Engine:
             elif self.config.timedelta:
                 stop_timer = self.config.timedelta + self.config.stop_timer_timedelta
 
-
         if self.config.mode == "BACKTEST":
-            return self.cerebro.run(maxcpus=1, optreturn = False, mode=self.config.mode, stdstats=self.config.stdstats,
+            return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
                                     **self.config.kwargs)
         return self.cerebro.run(mode=self.config.mode, stdstats=self.config.stdstats, **self.config.kwargs)
-
-
 
     def generate_datafeed(self):
         """ Generate a datafeed corresponding to config """
@@ -87,7 +84,7 @@ class Engine:
         """ Configure cerebro's broker """
         if self.config.mode != "LIVE":
             self.cerebro.broker.setcash(self.config.cash)
-            self.cerebro.broker.setcommission(self.config.commission/100)
+            self.cerebro.broker.setcommission(self.config.commission / 100)
         else:  # Generate a broker from the exchange
             key, secret = get_secrets()
             broker_config = {
@@ -102,7 +99,14 @@ class Engine:
             self.cerebro.setbroker(broker)
 
     def resample_datafeed(self, datafeed):
-        for timeframe in self.config.strategy.parameters["timeframes"]:
+        timeframes = []
+        for strategy in self.config.strategies:
+            if "timeframes" in strategy.parameters:
+                for timeframe in strategy.parameters["timeframes"]:
+                    timeframes.append(timeframe)
+
+        timeframes = set(timeframes)
+        for timeframe in timeframes:
             self.cerebro.resampledata(datafeed, timeframe=timeframe[0], compression=timeframe[1])
 
     def plot(self):

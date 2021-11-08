@@ -13,7 +13,7 @@ from models.Timers.StopSession import StopSession as StopSession
 
 warnings.filterwarnings("ignore")
 
-strategy = StochMacdRsi(logging=True, recurring_recap=dt.timedelta(minutes=240))
+strategies = [StochMacdRsi(logging=True, recurring_recap=dt.timedelta(minutes=240))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 stop_session = StopSession(when=dt.time(21), weekdays=[1])
 timers = [stop_session]
@@ -21,7 +21,7 @@ timers = [stop_session]
 engine = Engine()
 config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(days=1),
                              timeframe=bt.TimeFrame.Minutes,
-                             compression=1, strategy=strategy, debug=False, analyzers=analyzers, currency="EUR",
+                             compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
                              write_to="recap.txt", stdstats=False, observers=[ValueObserver()],
                              stop_timer_timedelta=dt.timedelta(minutes=5), timers=timers,
                              )

@@ -9,6 +9,7 @@ from backtrader.indicators import MovingAverageSimple as MAS
 from models.Indicators.Fractals.PriceFractals import PriceFractals as PriceFractals
 from dataclasses import dataclass
 from models.Strategies.Strategy import Strategy as Strategy
+import backtrader as bt
 
 
 class StochMacdRsi_strat(BracketStratSkeleton):
