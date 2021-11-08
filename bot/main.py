@@ -16,7 +16,7 @@ strategy = StochMacdRsi(logging=True)
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 
 engine = Engine()
-config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(days=1), timeframe=bt.TimeFrame.Minutes,
+config = EngineConfiguration(symbol="BTC/EUR", mode="BACKTEST", timedelta=dt.timedelta(days=1), timeframe=bt.TimeFrame.Minutes,
                              compression=1, strategy=strategy,debug=False, analyzers=analyzers, currency="EUR"
                              )
 engine.set_configuration(config)

@@ -5,6 +5,7 @@ from models.Datafeeds.DatafeedParams import DatafeedParams as DatafeedParams
 import yaml
 import time
 from ccxtbt import CCXTStore
+from models.Engine.EngineCerebro import EngineCerebro as EngineCerebro
 
 
 def get_secrets(path='config.yml'):
@@ -25,7 +26,7 @@ class Engine:
 
     def run(self):
         """ Launch the engine """
-        self.cerebro = bt.Cerebro()
+        self.cerebro = EngineCerebro()
         self.configure_broker()
 
         datafeed = self.generate_datafeed()
