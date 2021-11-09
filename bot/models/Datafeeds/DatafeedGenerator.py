@@ -52,7 +52,7 @@ class DatafeedGenerator:
     def generate_live_datafeed(self):
         """ Explicit """
 
-        with open("config.yml") as file:
+        with open("config/config.yml") as file:
             data = yaml.safe_load(file)
         key, secret = data["api_key"], data["api_secret"]
 
@@ -84,7 +84,7 @@ class DatafeedGenerator:
     def extract_klines(self):
         """ Extract klines from params """
 
-        with open("config.yml") as file:
+        with open("config/config.yml") as file:
             data = yaml.safe_load(file)
 
         # Connection to API

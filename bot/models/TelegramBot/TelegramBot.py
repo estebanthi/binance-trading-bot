@@ -5,7 +5,7 @@ from telegram.ext import Updater
 class TelegramBot:
 
     def __init__(self):
-        with open("config.yml", "r") as file:
+        with open("config/config.yml", "r") as file:
             data = yaml.safe_load(file)
             self.user = data["user"]
             token = data["telegram_token"]
