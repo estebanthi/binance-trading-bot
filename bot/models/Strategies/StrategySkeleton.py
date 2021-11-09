@@ -18,7 +18,6 @@ class StrategySkeleton(bt.Strategy):
         self.total_profit = 0
 
         self.add_timer(when=bt.timer.SESSION_START, repeat=self.p.recurring_recap, timername="recurring_recap")
-        self.memorized_recap = None
 
     def notify_data(self, data, status, *args, **kwargs):
         self.status = data._getstatusname(status)
@@ -67,10 +66,10 @@ class StrategySkeleton(bt.Strategy):
         if timername == "recurring_recap":
             if "trade_analyzer" in dir(self.analyzers):
                 analysis_result = self.analyzers.trade_analyzer.get_analysis()
-                self.format_recap(analysis_result, self.memorized_recap)
+                self.format_recap(analysis_result)
                 self.memorized_recap = dict(analysis_result)
 
-    def format_recap(self, analysis, memorized):
+    def format_recap(self, analysis):
         print(colored("------- RECURRING RECAP -------", "cyan"))
         for k1, v1 in analysis.items():
             if type(v1) == AutoOrderedDict:

@@ -5,6 +5,7 @@ import datetime as dt
 from models.Strategies.Strategy import Strategy as Strategy
 from models.Sizers.Sizer import Sizer as Sizer
 from models.Sizers.DefaultSizer import DefaultSizer as DefaultSizer
+from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 
 
 @dataclass
@@ -30,5 +31,5 @@ class EngineConfiguration:
     stop_timer_timedelta: dt.timedelta = None
     timers: list = field(default_factory=list)
     strategies: list = field(default_factory=list)
-
+    telegram_bot: TelegramBot = None
 

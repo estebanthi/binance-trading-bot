@@ -10,6 +10,7 @@ from models.Strategies.BracketStrats.StochMacdRsi import StochMacdRsi as StochMa
 import datetime as dt
 from models.Observers.Value import Value as ValueObserver
 from models.Timers.StopSession import StopSession as StopSession
+from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 
 warnings.filterwarnings("ignore")
 
@@ -18,12 +19,15 @@ analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 stop_session = StopSession(when=dt.time(21), weekdays=[1])
 timers = [stop_session]
 
+bot = TelegramBot()
+
 engine = Engine()
 config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(days=1),
                              timeframe=bt.TimeFrame.Minutes,
                              compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
                              write_to="recap.txt", stdstats=False, observers=[ValueObserver()],
                              stop_timer_timedelta=dt.timedelta(minutes=5), timers=timers,
+                             telegram_bot=bot
                              )
 engine.set_configuration(config)
 
