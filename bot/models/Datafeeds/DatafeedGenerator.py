@@ -47,8 +47,7 @@ class DatafeedGenerator:
             klines = self.extract_klines()
             klines_formatted = format_klines(klines)
             klines_formatted.to_csv(f"data/datasets/{title}")
-
-        return CustomOHLC(dataname=f"data/datasets/{title}", timeframe=self.p.timeframe, compression=self.p.compression)
+        return CustomOHLC(dataname=f"data/datasets/{title}", timeframe=self.p.timeframe, compression=self.p.compression, sessionstart=self.p.start_date)
 
     def generate_live_datafeed(self):
         """ Explicit """

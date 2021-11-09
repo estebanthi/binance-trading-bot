@@ -67,9 +67,9 @@ class Engine:
 
         if self.config.mode == "BACKTEST":
             return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
-                                    **self.config.kwargs)
+                                    telegram_bot=self.config.telegram_bot, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
         return self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
-                                stdstats=self.config.stdstats, symbol=self.config.symbol, **self.config.kwargs)
+                                stdstats=self.config.stdstats, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
 
     def generate_datafeed(self):
         """ Generate a datafeed corresponding to config """

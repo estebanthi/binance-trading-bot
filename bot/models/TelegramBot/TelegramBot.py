@@ -14,3 +14,6 @@ class TelegramBot:
 
     def send_message(self, message):
         self.updater.bot.sendMessage(chat_id=self.user, text=message)
+
+    def send_file(self, file):
+        self.updater.bot.sendDocument(chat_id=self.user, document=file)
