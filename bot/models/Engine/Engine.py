@@ -69,7 +69,7 @@ class Engine:
             return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
                                     **self.config.kwargs)
         return self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
-                                stdstats=self.config.stdstats, **self.config.kwargs)
+                                stdstats=self.config.stdstats, symbol=self.config.symbol, **self.config.kwargs)
 
     def generate_datafeed(self):
         """ Generate a datafeed corresponding to config """

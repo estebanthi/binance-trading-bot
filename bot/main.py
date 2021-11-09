@@ -16,13 +16,13 @@ warnings.filterwarnings("ignore")
 
 strategies = [StochMacdRsi(logging=True, recurring_recap=dt.timedelta(minutes=240))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
-stop_session = StopSession(when=dt.time(21), weekdays=[1])
+stop_session = StopSession(when=dt.time(21), weekdays=[2])
 timers = [stop_session]
 
 bot = TelegramBot()
 
 engine = Engine()
-config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(days=1),
+config = EngineConfiguration(symbol="BTC/EUR", mode="BACKTEST", timedelta=dt.timedelta(days=1),
                              timeframe=bt.TimeFrame.Minutes,
                              compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
                              write_to="recap.txt", stdstats=False, observers=[ValueObserver()],
@@ -33,7 +33,7 @@ engine.set_configuration(config)
 
 result = engine.run()
 
-engine.plot()
+
 
 result_analyzer = ResultAnalyzer(result)
 print(result_analyzer.get_pnls())
