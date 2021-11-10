@@ -59,12 +59,6 @@ class Engine:
 
         self.resample_datafeed(datafeed)
 
-        if self.config.stop_timer_timedelta:
-            if self.config.start_date:
-                stop_timer = dt.datetime.now() - self.config.start_date() + self.config.stop_timer_timedelta
-            elif self.config.timedelta:
-                stop_timer = self.config.timedelta + self.config.stop_timer_timedelta
-
         if self.config.mode == "BACKTEST":
             return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
                                     telegram_bot=self.config.telegram_bot, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)

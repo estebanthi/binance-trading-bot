@@ -1,3 +1,4 @@
+# Put here your imports
 import backtrader as bt
 import warnings
 from models.Engine.EngineConfiguration import EngineConfiguration as EngineConfiguration
@@ -12,26 +13,42 @@ from models.Observers.Value import Value as ValueObserver
 from models.Timers.StopSession import StopSession as StopSession
 from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 
+# To disable useless warnings
 warnings.filterwarnings("ignore")
 
-strategies = [StochMacdRsi(logging=True, recurring_recap=dt.timedelta(minutes=240))]
+# Put here your trading components
+strategies = [TripleEMA(logging=True)]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
-stop_session = StopSession(when=dt.time(21), weekdays=[2])
-timers = [stop_session]
+observers = [ValueObserver()]
+timers = [StopSession(when=dt.time(21), weekdays=[2])]
 
-bot = TelegramBot()
+# You can add a telegram bot if you want
+telegram_bot = TelegramBot()
 
-engine = Engine()
+# If you want a written recap, enter here its name
+# Default path where is saved the file is in data/backtesting_results
 write_to = "recap.txt"
-config = EngineConfiguration(symbol="BTC/EUR", mode="PAPER", timedelta=dt.timedelta(hours=3),
-                             timeframe=bt.TimeFrame.Minutes,
-                             compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-                             write_to=write_to, stdstats=False, observers=[ValueObserver()],
-                             stop_timer_timedelta=dt.timedelta(minutes=5), timers=timers,
-                             telegram_bot=bot
-                             )
+
+# Instantiate the engine
+engine = Engine()
+
+# Configure the engine
+config = EngineConfiguration(
+    mode="BACKTEST",
+    symbol="BTC/EUR",
+    timedelta=dt.timedelta(days=300),
+    timeframe=bt.TimeFrame.Minutes,
+    compression=240, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
+    write_to=write_to, stdstats=True, observers=observers,
+    telegram_bot=telegram_bot
+)
 engine.set_configuration(config)
 
+# Run the engine
 result = engine.run()
 
-bot.send_file(open(f"data/backtesting_results/{write_to}", "r"))
+# Plot the results
+engine.plot()
+
+# Send the results to the bot
+telegram_bot.send_file(open(f"data/backtesting_results/{write_to}", "r"))

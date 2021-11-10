@@ -28,7 +28,6 @@ class EngineConfiguration:
     write_to: str = None
     stdstats: bool = True
     observers: list = field(default_factory=list)
-    stop_timer_timedelta: dt.timedelta = None
     timers: list = field(default_factory=list)
     strategies: list = field(default_factory=list)
     telegram_bot: TelegramBot = None
