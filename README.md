@@ -8,7 +8,7 @@ Using crypto historical data, backtest your strategies, optimize the parameters 
 
 ## Visualize the results
 
-![](C:\Users\esteb\OneDrive\Images\BinanceTradingBot_example1.PNG)
+![](https://zupimages.net/up/21/45/dnis.png)
 
 
 
