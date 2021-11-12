@@ -59,11 +59,16 @@ class Engine:
 
         self.resample_datafeed(datafeed)
 
-        if self.config.mode == "BACKTEST":
-            return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
-                                    telegram_bot=self.config.telegram_bot, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
-        return self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
-                                stdstats=self.config.stdstats, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
+        try:
+            if self.config.mode == "BACKTEST":
+                return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
+                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
+            return self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
+                                        stdstats=self.config.stdstats, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
+        except Exception as e:
+            print(f"Error : {e}\nRetry in 5 seconds")
+            time.sleep(5)
+            self.run()
 
     def generate_datafeed(self):
         """ Generate a datafeed corresponding to config """
