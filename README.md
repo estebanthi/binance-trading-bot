@@ -42,6 +42,16 @@ pip3 install -r requirements.txt
 pip3 install git+git://github.com/Dave-Vallance/bt-ccxt-store
 ```
 
+Go into `backtrader` package, in folder `plot`, open file `locator.py`, and remove warnings in line 35, because it is deprecated :
+
+```python
+from matplotlib.dates import (HOURS_PER_DAY, MIN_PER_HOUR, SEC_PER_MIN,
+                              MONTHS_PER_YEAR, DAYS_PER_WEEK,
+                              SEC_PER_HOUR, SEC_PER_DAY,
+                              num2date, rrulewrapper, YearLocator,
+                              MicrosecondLocator, warnings) # Remove warnings here
+```
+
 
 
 ## How to use
