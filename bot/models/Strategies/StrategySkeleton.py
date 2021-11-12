@@ -74,7 +74,8 @@ class StrategySkeleton(bt.Strategy):
                 self.notify_recap(analysis_result)
 
     def notify_recap(self, analysis):
-        self.cerebro.p.telegram_bot.send_message(colored("------- RECURRING RECAP -------", "cyan"))
+        if self.cerebro.p.telegram_bot:
+            self.cerebro.p.telegram_bot.send_message(colored("------- RECURRING RECAP -------", "cyan"))
         for k1, v1 in analysis.items():
             if type(v1) == AutoOrderedDict:
                 for k2, v2 in v1.items():
@@ -82,14 +83,19 @@ class StrategySkeleton(bt.Strategy):
                         for k3, v3 in v2.items():
                             if type(v3) == AutoOrderedDict:
                                 for k4, v4 in v3.items():
-                                    self.cerebro.p.telegram_bot.send_message(f"{k1}/{k2}/{k3}/{k4} : {v4}")
+                                    if self.cerebro.p.telegram_bot:
+                                        self.cerebro.p.telegram_bot.send_message(f"{k1}/{k2}/{k3}/{k4} : {v4}")
                             else:
-                                self.cerebro.p.telegram_bot.send_message(f"{k1}/{k2}/{k3} : {v3}")
+                                if self.cerebro.p.telegram_bot:
+                                    self.cerebro.p.telegram_bot.send_message(f"{k1}/{k2}/{k3} : {v3}")
                     else:
-                        self.cerebro.p.telegram_bot.send_message(f"{k1}/{k2} : {v2}")
+                        if self.cerebro.p.telegram_bot:
+                            self.cerebro.p.telegram_bot.send_message(f"{k1}/{k2} : {v2}")
             else:
-                self.cerebro.p.telegram_bot.send_message(f"{k1} : {v1}")
-        self.cerebro.p.telegram_bot.send_message(colored("------- END -------", "cyan"))
+                if self.cerebro.p.telegram_bot:
+                    self.cerebro.p.telegram_bot.send_message(f"{k1} : {v1}")
+        if self.cerebro.p.telegram_bot:
+            self.cerebro.p.telegram_bot.send_message(colored("------- END -------", "cyan"))
 
     def format_recap(self, analysis):
         print(colored("------- RECURRING RECAP -------", "cyan"))
