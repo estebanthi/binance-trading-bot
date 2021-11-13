@@ -9,6 +9,7 @@ from models.Engine.EngineCerebro import EngineCerebro as EngineCerebro
 import datetime as dt
 from models.Timers.StopSession import StopSession as StopSession
 from backtrader.plot import PlotScheme as PlotScheme
+import pickle
 
 
 def get_secrets(path='config.yml'):
@@ -62,10 +63,21 @@ class Engine:
 
         try:
             if self.config.mode == "BACKTEST":
-                return self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, stdstats=self.config.stdstats,
-                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
-            return self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
-                                        stdstats=self.config.stdstats, symbol=self.config.symbol, path_to_result=self.config.write_to, **self.config.kwargs)
+                results = self.cerebro.run(maxcpus=1, optreturn=True, mode=self.config.mode,
+                                           stdstats=self.config.stdstats,
+                                           telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
+                                           path_to_result=self.config.write_to, **self.config.kwargs)
+
+            else:
+                results = self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
+                                       stdstats=self.config.stdstats, symbol=self.config.symbol,
+                                       path_to_result=self.config.write_to, **self.config.kwargs)
+
+            if self.config.save_results:
+                with open(f"data/backtesting_results/{self.config.save_results}", "wb") as file:
+                    pickle.dump(results, file)
+            return results
+
         except Exception as e:
             print(f"Error : {e}\nRetry in 5 seconds")
             time.sleep(5)

@@ -31,4 +31,5 @@ class EngineConfiguration:
     timers: list = field(default_factory=list)
     strategies: list = field(default_factory=list)
     telegram_bot: TelegramBot = None
+    save_results: str = None
 
