@@ -1,3 +1,5 @@
+import time
+
 import backtrader as bt
 from termcolor import colored
 import datetime as dt
@@ -93,14 +95,18 @@ class StrategySkeleton(bt.Strategy):
                         for k3, v3 in v2.items():
                             if type(v3) == AutoOrderedDict:
                                 for k4, v4 in v3.items():
+                                    time.sleep(1)
                                     self.telegram_bot.send_message(f"{k1}/{k2}/{k3}/{k4} : {v4}")
                             else:
+                                time.sleep(1)
                                 self.telegram_bot.send_message(f"{k1}/{k2}/{k3} : {v3}")
                     else:
+                        time.sleep(1)
                         self.telegram_bot.send_message(f"{k1}/{k2} : {v2}")
             else:
+                time.sleep(1)
                 self.telegram_bot.send_message(f"{k1} : {v1}")
-            self.telegram_bot.send_message(colored("------- END -------", "cyan"))
+        self.telegram_bot.send_message(colored("------- END -------", "cyan"))
 
     def print_recap(self, analysis):
         print(colored("------- RECURRING RECAP -------", "cyan"))
@@ -133,3 +139,7 @@ class StrategySkeleton(bt.Strategy):
                 (order.executed.price,
                  order.executed.value,
                  order.executed.comm))
+
+    def stop(self):
+        if self.telegram_bot and self.cerebro.p.mode == "BACKTEST":
+            self.telegram_bot.send_message("BACKTEST FINISHED")

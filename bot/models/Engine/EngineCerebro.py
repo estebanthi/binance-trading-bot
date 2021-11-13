@@ -18,7 +18,8 @@ class EngineCerebro(bt.Cerebro):
             kwargs.get("function")(cerebro=self)
 
     def notify_data(self, data, status, *args, **kwargs):
-        if self.p.telegram_bot:
-            self.p.telegram_bot.send_message(f"--- DATA LOADED ---\n--- RUNNING {self.p.mode} MODE ---\n--- SYMBOL {self.p.symbol} ---")
-            self.p.telegram_bot.send_message(f"From {self.datas[0].p.fromdate.strftime('%m/%d/%Y, %H:%M:%S')}")
+        if status == data.LIVE:
+            if self.p.telegram_bot:
+                self.p.telegram_bot.send_message(f"--- DATA LOADED ---\n--- RUNNING {self.p.mode} MODE ---\n--- SYMBOL {self.p.symbol} ---")
+                self.p.telegram_bot.send_message(f"From {self.datas[0].p.fromdate.strftime('%m/%d/%Y, %H:%M:%S')}")
 

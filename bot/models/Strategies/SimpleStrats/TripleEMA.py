@@ -41,7 +41,7 @@ class TripleEMA_strat(SimpleStratSkeleton):
 @dataclass
 class TripleEMA(Strategy):
 
-    def __init__(self, logging=TripleEMA_strat.params.logging, longs_enabled=TripleEMA_strat.params.longs_enabled, shorts_enabled=TripleEMA_strat.params.shorts_enabled,
+    def __init__(self, recurring_recap=TripleEMA_strat.params.recurring_recap, logging=TripleEMA_strat.params.logging, longs_enabled=TripleEMA_strat.params.longs_enabled, shorts_enabled=TripleEMA_strat.params.shorts_enabled,
                  fastestperiod=TripleEMA_strat.params.fastestperiod, middleperiod=TripleEMA_strat.params.middleperiod, slowestperiod=TripleEMA_strat.params.slowestperiod):
         self.strategy = TripleEMA_strat
         self.parameters = locals()
