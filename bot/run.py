@@ -13,13 +13,14 @@ from models.Observers.Value import Value as ValueObserver
 from models.Timers.StopSession import StopSession as StopSession
 from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 from models.Sizers.PercentSizer import PercentSizer as PercentSizer
+from models.Strategies.BracketStrats.BollingerBandsDivergences import BollingerBandsDivergence as BollingerBandsDivergence
 
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA(logging=True)]
+strategies = [BollingerBandsDivergence()]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 timers = [StopSession(when=dt.time(21), weekdays=[2])]
@@ -39,7 +40,7 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BTC/EUR",
-    timedelta=dt.timedelta(hours=10),
+    timedelta=dt.timedelta(hours=20),
     timeframe=bt.TimeFrame.Minutes,
     compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
     write_to=write_to, stdstats=True, observers=observers, telegram_bot=None, sizer=sizer

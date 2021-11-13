@@ -8,6 +8,7 @@ from ccxtbt import CCXTStore
 from models.Engine.EngineCerebro import EngineCerebro as EngineCerebro
 import datetime as dt
 from models.Timers.StopSession import StopSession as StopSession
+from backtrader.plot import PlotScheme as PlotScheme
 
 
 def get_secrets(path='config.yml'):
@@ -110,4 +111,4 @@ class Engine:
             self.cerebro.resampledata(datafeed, timeframe=timeframe[0], compression=timeframe[1])
 
     def plot(self):
-        self.cerebro.plot(style='candlestick')
+        self.cerebro.plot(style='candlestick', barup="green")

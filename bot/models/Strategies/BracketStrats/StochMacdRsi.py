@@ -33,12 +33,12 @@ class StochMacdRsi_strat(BracketStratSkeleton):
         super().__init__()
         self.macd = MACD(period_me1=self.p.period_me1, period_me2=self.p.period_me2, period_signal=self.p.period_signal,
                          movav=self.p.movav_macd)
-        self.cross = CrossOver(self.macd.macd, self.macd.signal)
+        self.cross = CrossOver(self.macd.macd, self.macd.signal, plot=False)
         self.rsi = RSI(period=self.p.period_rsi, movav=self.p.movav_rsi)
         self.stoch = Stochastic(period=self.p.period_stoch, period_dfast=self.p.period_dfast,
                                 period_dslow=self.p.period_dslow, movav=self.p.movav_stoch,
                                 upperband=self.p.upperband_stoch, lowerband=self.p.lowerband_stoch)
-        self.fractals = PriceFractals().fractals_signal
+        self.fractals = PriceFractals(plot=False).fractals_signal
         info = self.broker.getcommissioninfo(self.datas[0])
 
     def get_long(self):
