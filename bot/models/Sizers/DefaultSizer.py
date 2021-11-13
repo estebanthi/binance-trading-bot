@@ -7,5 +7,5 @@ from dataclasses import field
 @dataclass
 class DefaultSizer(Sizer):
     sizer: bt.Sizer = bt.sizers.PercentSizer
-    parameters: dict = field(default_factory=lambda: {"percents":99})
+    parameters: dict = field(default_factory=lambda: {"percents": 10})
 

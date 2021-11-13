@@ -12,6 +12,7 @@ import datetime as dt
 from models.Observers.Value import Value as ValueObserver
 from models.Timers.StopSession import StopSession as StopSession
 from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
+from models.Sizers.PercentSizer import PercentSizer as PercentSizer
 
 
 # To disable useless warnings
@@ -22,6 +23,7 @@ strategies = [TripleEMA(logging=True)]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 timers = [StopSession(when=dt.time(21), weekdays=[2])]
+sizer = PercentSizer(10)
 
 # You can add a telegram bot if you want
 telegram_bot = TelegramBot()
@@ -40,7 +42,7 @@ config = EngineConfiguration(
     timedelta=dt.timedelta(hours=10),
     timeframe=bt.TimeFrame.Minutes,
     compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-    write_to=write_to, stdstats=True, observers=observers, telegram_bot=telegram_bot
+    write_to=write_to, stdstats=True, observers=observers, telegram_bot=telegram_bot, sizer=sizer
 )
 engine.set_configuration(config)
 

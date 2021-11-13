@@ -67,7 +67,7 @@ class SimpleStratSkeleton(StrategySkeleton):
 
     def notify_order_telegram(self, order):
         telegram_bot = self.cerebro.p.telegram_bot
-        if telegram_bot:
+        if telegram_bot and self.cerebro.p.mode != "BACKTEST":
             if order.isbuy():
                 telegram_bot.send_message(
                     'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
