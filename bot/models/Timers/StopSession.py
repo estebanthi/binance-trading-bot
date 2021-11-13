@@ -5,7 +5,8 @@ from termcolor import colored
 
 
 def stop_run(cerebro):
-    print(colored("SESSION FINISHED", "red"))
+    if cerebro.p.telegram_bot:
+        cerebro.p.telegram_bot.send_message("SESSION FINISHED")
     cerebro.runstop()
 
 

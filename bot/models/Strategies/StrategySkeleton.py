@@ -141,6 +141,7 @@ class StrategySkeleton(bt.Strategy):
                  order.executed.comm))
 
     def stop(self):
+        print(colored("SESSION FINISHED", "red"))
         if self.telegram_bot and self.cerebro.p.mode == "BACKTEST":
             self.telegram_bot.send_message("BACKTEST FINISHED")
         if self.cerebro.p.mode != "BACKTEST" and self.telegram_bot:
