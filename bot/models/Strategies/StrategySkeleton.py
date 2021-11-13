@@ -69,9 +69,10 @@ class StrategySkeleton(bt.Strategy):
 
         if timername == "recurring_recap" and self.cerebro.p.mode != "BACKTEST":
             if "trade_analyzer" in dir(self.analyzers):
-                analysis_result = self.analyzers.trade_analyzer.get_analysis()
-                self.format_recap(analysis_result)
-                self.notify_recap(analysis_result)
+                if self.status != "DELAYED":
+                    analysis_result = self.analyzers.trade_analyzer.get_analysis()
+                    self.format_recap(analysis_result)
+                    self.notify_recap(analysis_result)
 
     def notify_recap(self, analysis):
         if self.cerebro.p.telegram_bot:

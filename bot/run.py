@@ -20,11 +20,11 @@ from models.Strategies.BracketStrats.BollingerBandsDivergences import BollingerB
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [BollingerBandsDivergence()]
+strategies = [TripleEMA()]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 timers = [StopSession(when=dt.time(21), weekdays=[2])]
-sizer = PercentSizer(10)
+sizer = PercentSizer(99)
 
 # You can add a telegram bot if you want
 telegram_bot = TelegramBot()
@@ -38,12 +38,12 @@ engine = Engine()
 
 # Configure the engine
 config = EngineConfiguration(
-    mode="BACKTEST",
+    mode="PAPER",
     symbol="BTC/EUR",
-    timedelta=dt.timedelta(hours=20),
+    timedelta=dt.timedelta(hours=10),
     timeframe=bt.TimeFrame.Minutes,
     compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-    write_to=write_to, stdstats=True, observers=observers, telegram_bot=None, sizer=sizer
+    write_to=write_to, stdstats=True, observers=observers, sizer=sizer
 )
 engine.set_configuration(config)
 
