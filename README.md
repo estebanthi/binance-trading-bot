@@ -172,6 +172,7 @@ Be careful when using multiple strategies with multiple timeframes, because it c
 ## To Do
 
 - [ ] Document the code
-- [ ] Rename strategies
-- [ ] Add Telegram notifications
+- [x] Rename strategies
+- [x] Add Telegram notifications
+- [ ] Modify some indicators plotlines
 
