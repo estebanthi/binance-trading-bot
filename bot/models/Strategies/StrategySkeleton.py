@@ -124,3 +124,10 @@ class StrategySkeleton(bt.Strategy):
         if "trade_analyzer" in dir(self.analyzers):
             analysis_result = self.analyzers.trade_analyzer.get_analysis()
             self.format_recap(analysis_result)
+
+    def notify_trade_telegram(self, trade):
+        telegram_bot = self.cerebro.p.telegram_bot
+        if telegram_bot:
+            telegram_bot.send_message('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
+                                      (trade.pnl, trade.pnlcomm))
+            telegram_bot.send_message("TOTAL PROFIT : %.2f" % self.total_profit)

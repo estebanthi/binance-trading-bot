@@ -28,6 +28,7 @@ class SimpleStratSkeleton(StrategySkeleton):
                          (order.executed.price,
                           order.executed.value,
                           order.executed.comm))
+            self.notify_order_telegram(order)
 
 
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
@@ -63,3 +64,19 @@ class SimpleStratSkeleton(StrategySkeleton):
             if self.close_short() and self.position.size < 0:
                 self.log('SHORT POS CLOSED, %.2f' % self.datas[0].close[0])
                 self.close()
+
+    def notify_order_telegram(self, order):
+        telegram_bot = self.cerebro.p.telegram_bot
+        if telegram_bot:
+            if order.isbuy():
+                telegram_bot.send_message(
+                    'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
+                    (order.executed.price,
+                     order.executed.value,
+                     order.executed.comm))
+            else:
+                telegram_bot.send_message(
+                    'SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
+                    (order.executed.price,
+                     order.executed.value,
+                     order.executed.comm))

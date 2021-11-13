@@ -40,7 +40,7 @@ config = EngineConfiguration(
     timedelta=dt.timedelta(hours=10),
     timeframe=bt.TimeFrame.Minutes,
     compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-    write_to=write_to, stdstats=True, observers=observers,
+    write_to=write_to, stdstats=True, observers=observers, telegram_bot=telegram_bot
 )
 engine.set_configuration(config)
 

@@ -13,13 +13,13 @@ class BracketStratSkeleton(StrategySkeleton):
         super().__init__()
         self.orefs = list()
 
-
     def notify_order(self, order):
         self.log('Order ref: {} / Type {} / Status {}'.format(
             order.ref, 'Buy' * order.isbuy() or 'Sell',
             order.getstatusname()))
         if not order.alive() and order.ref in self.orefs:
             self.orefs.remove(order.ref)
+        self.notify_order_telegram(order)
 
     def next(self):
         self.get_values()
@@ -67,3 +67,18 @@ class BracketStratSkeleton(StrategySkeleton):
                                 * self.p.risk_reward_ratio
         return take_profit_price
 
+    def notify_order_telegram(self, order):
+        telegram_bot = self.cerebro.p.telegram_bot
+        if telegram_bot:
+            if order.isbuy():
+                telegram_bot.send_message(
+                    'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
+                    (order.executed.price,
+                     order.executed.value,
+                     order.executed.comm))
+            else:
+                telegram_bot.send_message(
+                    'SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
+                    (order.executed.price,
+                     order.executed.value,
+                     order.executed.comm))
