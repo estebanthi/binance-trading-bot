@@ -56,7 +56,7 @@ from matplotlib.dates import (HOURS_PER_DAY, MIN_PER_HOUR, SEC_PER_MIN,
 
 ## How to use
 
-To use the bot, just go in the folder ```bot``` and edit the ```main.py``` file. But first, you have to create the ```config.yml``` file.
+To use the bot, just go in the folder ```bot``` and create your first run script, or edit the one already existing. But first, you have to create the ```config.yml``` file.
 
 
 
