@@ -116,7 +116,7 @@ class StrategySkeleton(bt.Strategy):
         print(colored("------- END -------", "cyan"))
 
     def notify_beginning_telegram(self):
-        if self.cerebro.p.mode == "BACKTEST":
+        if self.cerebro.p.mode == "BACKTEST" and self.cerebro.p.telegram_bot:
             self.cerebro.p.telegram_bot.send_message(
                 f"--- DATA LOADED ---\n--- RUNNING {self.cerebro.p.mode} MODE ---\n--- SYMBOL {self.cerebro.p.symbol} ---")
 

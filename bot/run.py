@@ -29,7 +29,7 @@ sizer = PercentSizer(10)
 telegram_bot = TelegramBot()
 
 # If you want a written recap, enter here its name
-# Default path where is saved the file is in data/backtesting_results
+# Default path where is saved the file is data/backtesting_results
 write_to = "recap.txt"
 
 # Instantiate the engine
@@ -37,12 +37,12 @@ engine = Engine()
 
 # Configure the engine
 config = EngineConfiguration(
-    mode="PAPER",
+    mode="BACKTEST",
     symbol="BTC/EUR",
     timedelta=dt.timedelta(hours=10),
     timeframe=bt.TimeFrame.Minutes,
     compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-    write_to=write_to, stdstats=True, observers=observers, telegram_bot=telegram_bot, sizer=sizer
+    write_to=write_to, stdstats=True, observers=observers, telegram_bot=None, sizer=sizer
 )
 engine.set_configuration(config)
 
