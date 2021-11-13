@@ -5,7 +5,7 @@ import backtrader as bt
 from dataclasses import field
 
 
-class Core(SimpleStratSkeleton):
+class TripleEMA_strat(SimpleStratSkeleton):
     params = (
         ('fastestperiod', 20),
         ('middleperiod', 50),
@@ -41,9 +41,9 @@ class Core(SimpleStratSkeleton):
 @dataclass
 class TripleEMA(Strategy):
 
-    def __init__(self, logging=Core.params.logging, longs_enabled=Core.params.longs_enabled, shorts_enabled=Core.params.shorts_enabled,
-                 fastestperiod=Core.params.fastestperiod, middleperiod=Core.params.middleperiod, slowestperiod=Core.params.slowestperiod):
-        self.strategy = Core
+    def __init__(self, logging=TripleEMA_strat.params.logging, longs_enabled=TripleEMA_strat.params.longs_enabled, shorts_enabled=TripleEMA_strat.params.shorts_enabled,
+                 fastestperiod=TripleEMA_strat.params.fastestperiod, middleperiod=TripleEMA_strat.params.middleperiod, slowestperiod=TripleEMA_strat.params.slowestperiod):
+        self.strategy = TripleEMA_strat
         self.parameters = locals()
         self.remove_self()
 
