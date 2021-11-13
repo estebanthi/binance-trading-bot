@@ -19,7 +19,8 @@ class BracketStratSkeleton(StrategySkeleton):
             order.getstatusname()))
         if not order.alive() and order.ref in self.orefs:
             self.orefs.remove(order.ref)
-        self.notify_order_telegram(order)
+        if self.telegram_enabled and self.telegram_bot:
+            self.notify_order_telegram(order)
 
     def next(self):
         self.get_values()

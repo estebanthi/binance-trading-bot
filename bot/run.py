@@ -20,7 +20,7 @@ from models.Strategies.BracketStrats.BollingerBandsDivergences import BollingerB
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA()]
+strategies = [TripleEMA(logging=True)]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 timers = [StopSession(when=dt.time(21), weekdays=[2])]
@@ -43,7 +43,7 @@ config = EngineConfiguration(
     timedelta=dt.timedelta(hours=10),
     timeframe=bt.TimeFrame.Minutes,
     compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-    write_to=write_to, stdstats=True, observers=observers, sizer=sizer
+    write_to=write_to, stdstats=True, observers=observers, sizer=sizer, telegram_bot=telegram_bot
 )
 engine.set_configuration(config)
 
