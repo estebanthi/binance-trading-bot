@@ -20,7 +20,7 @@ from models.Strategies.BracketStrats.BollingerBandsDivergences import \
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA(logging=False, fastestperiod=range(10, 35, 5), middleperiod=range(40, 80, 5),
+strategies = [TripleEMA(logging=False, fastestperiod=range(10, 35, 3), middleperiod=range(40, 80, 5),
                         slowestperiod=range(90, 150, 10))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
