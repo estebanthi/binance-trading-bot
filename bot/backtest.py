@@ -24,7 +24,7 @@ strategies = [TripleEMA(logging=False, fastestperiod=range(10, 35, 5), middleper
                         slowestperiod=range(90, 150, 10))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
-sizer = PercentSizer(10)
+sizer = PercentSizer(99)
 
 # You can add a telegram bot if you want
 telegram_bot = TelegramBot()
@@ -36,17 +36,17 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BTC/EUR",
-    start_date="2021/01/01 0:0:0",
+    start_date="2020/01/01 0:0:0",
     end_date="2021/11/01 0:0:0",
-    timeframe=bt.TimeFrame.Minutes,
-    compression=240,
+    timeframe=bt.TimeFrame.Days,
+    compression=1,
     strategies=strategies,
     analyzers=analyzers,
     stdstats=True,
     observers=observers,
     sizer=sizer,
     telegram_bot=telegram_bot,
-    save_results="results_sizer10.dat"
+    save_results="results.dat"
 )
 engine.set_configuration(config)
 
