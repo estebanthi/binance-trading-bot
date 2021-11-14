@@ -79,15 +79,14 @@ class StrategySkeleton(bt.Strategy):
 
         if timername == "recurring_recap" and self.cerebro.p.mode != "BACKTEST":
             if "trade_analyzer" in dir(self.analyzers):
-                if self.status != "DELAYED":
-                    analysis_result = self.analyzers.trade_analyzer.get_analysis()
-                    self.print_recap(analysis_result)
-                    # Telegram notif
-                    if self.telegram_enabled and self.telegram_bot:
-                        self.notify_recap_telegram(analysis_result)
+                analysis_result = self.analyzers.trade_analyzer.get_analysis()
+                self.print_recap(analysis_result)
+                # Telegram notif
+                if self.telegram_enabled and self.telegram_bot:
+                    self.notify_recap_telegram(analysis_result)
 
     def notify_recap_telegram(self, analysis):
-        self.telegram_bot.send_message(colored("------- RECURRING RECAP -------", "cyan"))
+        self.telegram_bot.send_message("------- RECURRING RECAP -------")
         for k1, v1 in analysis.items():
             if type(v1) == AutoOrderedDict:
                 for k2, v2 in v1.items():
@@ -106,7 +105,7 @@ class StrategySkeleton(bt.Strategy):
             else:
                 time.sleep(1)
                 self.telegram_bot.send_message(f"{k1} : {v1}")
-        self.telegram_bot.send_message(colored("------- END -------", "cyan"))
+        self.telegram_bot.send_message("------- END -------")
 
     def print_recap(self, analysis):
         print(colored("------- RECURRING RECAP -------", "cyan"))
