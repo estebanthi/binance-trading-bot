@@ -24,14 +24,10 @@ strategies = [TripleEMA(logging=False, fastestperiod=range(10, 35, 5), middleper
                         slowestperiod=range(90, 150, 10))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
-sizer = PercentSizer(99)
+sizer = PercentSizer(10)
 
 # You can add a telegram bot if you want
 telegram_bot = TelegramBot()
-
-# If you want a written recap, enter here its name
-# Default path where is saved the file is data/backtesting_results
-write_to = "recap.txt"
 
 # Instantiate the engine
 engine = Engine()
@@ -50,11 +46,11 @@ config = EngineConfiguration(
     observers=observers,
     sizer=sizer,
     telegram_bot=telegram_bot,
-    save_results="results.dat"
+    save_results="results_sizer10.dat"
 )
 engine.set_configuration(config)
 
 # Run the engine
-result = engine.run()
+engine.run()
 
 telegram_bot.send_message("BACKTEST FINISHED")
