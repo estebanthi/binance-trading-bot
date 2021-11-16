@@ -38,12 +38,12 @@ class Core(bt.Analyzer):
             'average_gross': average_gross,
             'cumulative_gross': cumulative_gross,
             'total_net': total_net,
-            'average_net': total_gross,
+            'average_net': average_net,
             'cumulative_net': cumulative_net
         }
 
     def notify_trade(self, trade):
-
+        self.side = 'long' if self.strategy.position.size > 0 else 'short'
         if trade.isclosed:
             percent_gross, percent_net = self.get_percents(trade)
             self.trades.append({
@@ -51,7 +51,7 @@ class Core(bt.Analyzer):
                 'percent_net': percent_net
             })
 
-        self.side = 'long' if self.strategy.position.size > 0 else 'short'
+
 
     def get_percent_sum(self):
         """

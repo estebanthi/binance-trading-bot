@@ -15,13 +15,14 @@ from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 from models.Sizers.PercentSizer import PercentSizer as PercentSizer
 from models.Strategies.BracketStrats.BollingerBandsDivergences import \
     BollingerBandsDivergence as BollingerBandsDivergence
+from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
+from models.Sizers.FixedSizer import FixedSizer as FixedSizer
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA(logging=False, fastestperiod=15, middleperiod=65,
-                        slowestperiod=140)]
+strategies = [PSAR_EMA()]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -35,8 +36,8 @@ config = EngineConfiguration(
     symbol="BTC/EUR",
     start_date="2020/01/01 0:0:0",
     end_date="2021/11/01 0:0:0",
-    timeframe=bt.TimeFrame.Days,
-    compression=1,
+    timeframe=bt.TimeFrame.Minutes,
+    compression=240,
     strategies=strategies,
     analyzers=analyzers,
     stdstats=True,
@@ -46,6 +47,13 @@ config = EngineConfiguration(
 engine.set_configuration(config)
 
 # Run the engine
-engine.run()
+result = engine.run()
 
+# Charting
 engine.plot()
+
+result_analyzer = ResultAnalyzer(result)
+pnls = result_analyzer.get_pnls()
+print(pnls)
+
+print(result[0][0].analyzers.percent_getter.get_analysis())

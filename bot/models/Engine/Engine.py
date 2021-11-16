@@ -63,7 +63,7 @@ class Engine:
 
         try:
             if self.config.mode == "BACKTEST":
-                results = self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode,
+                results = self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, tradehistory=True,
                                            stdstats=self.config.stdstats,
                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
                                            path_to_result=self.config.write_to, **self.config.kwargs)
