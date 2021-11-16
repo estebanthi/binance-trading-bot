@@ -20,18 +20,21 @@ from models.Strategies.BracketStrats.BollingerBandsDivergences import \
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA(logging=False, fastestperiod=15, middleperiod=65,
-                        slowestperiod=140)]
+strategies = [TripleEMA(logging=False, fastestperiod=range(10,12), middleperiod=range(50,62),
+                        slowestperiod=range(100,103))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
+
+# You can add a telegram bot if you want
+telegram_bot = TelegramBot()
 
 # Instantiate the engine
 engine = Engine()
 
 # Configure the engine
 config = EngineConfiguration(
-    mode="BACKTEST",
+    mode="OPTIMIZE",
     symbol="BTC/EUR",
     start_date="2020/01/01 0:0:0",
     end_date="2021/11/01 0:0:0",
@@ -42,10 +45,12 @@ config = EngineConfiguration(
     stdstats=True,
     observers=observers,
     sizer=sizer,
+    telegram_bot=telegram_bot,
+    save_results="results11.dat"
 )
 engine.set_configuration(config)
 
 # Run the engine
 engine.run()
 
-engine.plot()
+telegram_bot.send_message("OPTIMIZATION FINISHED")

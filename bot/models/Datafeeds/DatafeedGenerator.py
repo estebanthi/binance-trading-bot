@@ -32,9 +32,9 @@ class DatafeedGenerator:
 
     def generate_datafeed(self):
         datafeed = None
-        if self.p.mode == "BACKTEST":
+        if self.p.mode == "BACKTEST" or self.p.mode == "OPTIMIZE":
             datafeed = self.generate_backtesting_datafeed()
-        if self.p.mode != "BACKTEST":  # PAPER or REAL
+        else:  # PAPER or REAL
             datafeed = self.generate_live_datafeed()
         return datafeed
 

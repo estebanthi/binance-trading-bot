@@ -54,7 +54,7 @@ class Engine:
                                    **timer.parameters)
 
         for strategy in self.config.strategies:
-            if self.config.mode == "BACKTEST":
+            if self.config.mode == "BACKTEST" or self.config.mode == "OPTIMIZE":
                 self.cerebro.optstrategy(strategy.strategy, **strategy.parameters)
             else:
                 self.cerebro.addstrategy(strategy.strategy, **strategy.parameters)
@@ -63,6 +63,11 @@ class Engine:
 
         try:
             if self.config.mode == "BACKTEST":
+                results = self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode,
+                                           stdstats=self.config.stdstats,
+                                           telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
+                                           path_to_result=self.config.write_to, **self.config.kwargs)
+            elif self.config.mode == "OPTIMIZE":
                 results = self.cerebro.run(maxcpus=1, optreturn=True, mode=self.config.mode,
                                            stdstats=self.config.stdstats,
                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,

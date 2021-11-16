@@ -77,7 +77,7 @@ class StrategySkeleton(bt.Strategy):
     def notify_timer(self, timer, when, **kwargs):
         timername = kwargs.get("timername", None)
 
-        if timername == "recurring_recap" and self.cerebro.p.mode != "BACKTEST":
+        if timername == "recurring_recap" and (self.cerebro.p.mode != "BACKTEST" and self.cerebro.p.mode != "OPTIMIZE"):
             if "trade_analyzer" in dir(self.analyzers):
                 analysis_result = self.analyzers.trade_analyzer.get_analysis()
                 self.print_recap(analysis_result)
@@ -140,7 +140,7 @@ class StrategySkeleton(bt.Strategy):
                  order.executed.comm))
 
     def stop(self):
-        if self.cerebro.p.mode != "BACKTEST":
+        if self.cerebro.p.mode != "BACKTEST" and self.cerebro.p.mode != "OPTIMIZE":
             print(colored("SESSION FINISHED", "red"))
             if self.telegram_bot:
                 self.telegram_bot.send_message(f"{self.cerebro.p.mode} SESSION FINISHED")
