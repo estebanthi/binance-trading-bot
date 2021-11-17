@@ -1,6 +1,9 @@
 # Put here your imports
 import backtrader as bt
 import warnings
+
+import numpy as np
+
 from models.Engine.EngineConfiguration import EngineConfiguration as EngineConfiguration
 from models.Strategies.SimpleStrats.TripleEMA import TripleEMA as TripleEMA
 from models.Engine.Engine import Engine as Engine
@@ -15,13 +18,15 @@ from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 from models.Sizers.PercentSizer import PercentSizer as PercentSizer
 from models.Strategies.BracketStrats.BollingerBandsDivergences import \
     BollingerBandsDivergence as BollingerBandsDivergence
+from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA(logging=False, fastestperiod=range(26,31,1), middleperiod=range(55,60,1),
-                        slowestperiod=range(113,117,1))]
+strategies = [PSAR_EMA(logging=False, risk_reward_ratio=np.arange(13, 20, 2), psar_period=2,
+                       psar_af=np.linspace(0.125,0.175,5),
+                       psar_afmax=np.linspace(0.35,0.45,5))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -46,7 +51,7 @@ config = EngineConfiguration(
     observers=observers,
     sizer=sizer,
     telegram_bot=telegram_bot,
-    save_results="triple_ema_optimized_4h.dat"
+    save_results="psar_ema_optimized_4h.dat"
 )
 engine.set_configuration(config)
 

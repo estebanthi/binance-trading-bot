@@ -22,7 +22,7 @@ from models.Sizers.FixedSizer import FixedSizer as FixedSizer
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [PSAR_EMA()]
+strategies = [PSAR_EMA(risk_reward_ratio=13, psar_af=0.125, psar_afmax=0.35)]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
