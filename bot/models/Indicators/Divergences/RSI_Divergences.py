@@ -4,6 +4,14 @@ from models.Indicators.Divergences.Divergences import Divergences as Divergences
 
 
 class RSI_Divergences(Divergences):
+    """
+    RSI divergences
+
+
+    Params :
+        - period : int
+            RSI's period, default is 13
+    """
 
     params = (
         ('period', 13),

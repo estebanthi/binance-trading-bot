@@ -3,6 +3,35 @@ from models.Indicators.Fractals.PriceFractals import PriceFractals as PriceFract
 
 
 class Divergences(bt.Indicator):
+    """
+    Generic divergences indicator
+
+
+    Params :
+
+        - bars : int
+            Number of bars used for calculation, default is 2
+
+
+    Output :
+
+        - bear_div : float
+            Bearish divergences
+
+        - bull_div : float
+            Bullish divergences
+
+        - bear_div_hidden : float
+            Hidden bearish divergences
+
+        - bull_div_hidden : float
+            Hidden bullish divergences
+
+        - bars : int
+            Bars parameter
+
+    """
+
     params = (('bars', 2),)
     lines = ('bear_div', 'bull_div', 'bear_div_hidden', 'bull_div_hidden', 'bars')
 

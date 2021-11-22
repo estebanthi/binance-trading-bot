@@ -3,6 +3,25 @@ from backtrader.indicators import ExponentialMovingAverage as EMA
 
 
 class Pullbacks(bt.Indicator):
+    """
+    An indicator to detect pullbacks to EMA
+
+
+    Params :
+
+        - ema_period : int
+            EMA period, default is 50
+
+        - period : int
+            Period for pullbacks calculation, default is 3
+
+
+    Outputs :
+
+        - pullbacks : int
+            1 if upwards pullback, -1 if downwards, else 0
+
+    """
 
     params = (('ema_period', 50),('period',3))
 
