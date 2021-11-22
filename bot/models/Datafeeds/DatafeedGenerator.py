@@ -1,5 +1,6 @@
 import backtrader as bt
 import os
+from models.Datafeeds.CustomOHLC import CustomOHLC as CustomOHLC
 import yaml
 from binance import Client
 import pandas as pd
@@ -42,27 +43,34 @@ class DatafeedGenerator:
     def generate_backtesting_datafeed(self):
         """ Generate datafeed for backtesting purpose """
 
-        mongo_driver = MongoDriver()
-        mongo_driver.connect()
-        if not mongo_driver.get_ticker(self.p.symbol, self.format_timeframe()):
-            historical = format_klines(self.extract_klines()).to_dict("records")
-            mongo_driver.add_ticker(self.p.symbol, self.format_timeframe(), historical)
-        else:
-            historical = mongo_driver.get_historical(self.p.symbol, self.format_timeframe())
-            if historical[0]["Date"] > self.p.start_date or historical[-1]["Date"] < self.p.end_date:
-                updated_historical = format_klines(self.extract_klines()).to_dict("records")
-                mongo_driver.update_ticker(self.p.symbol, self.format_timeframe(), updated_historical)
+        with open("config.yml", "r") as file:
+            data = yaml.safe_load(file)
 
-        historical = mongo_driver.get_historical(self.p.symbol, self.format_timeframe())
-        mongo_driver.close()
+        if data["mongo_url"]:
+            mongo_driver = MongoDriver()
+            mongo_driver.connect()
+            if not mongo_driver.get_ticker(self.p.symbol, self.format_timeframe()):
+                historical = format_klines(self.extract_klines(), 1).to_dict("records")
+                mongo_driver.add_ticker(self.p.symbol, self.format_timeframe(), historical)
+            else:
+                historical = mongo_driver.get_historical(self.p.symbol, self.format_timeframe())
+                if historical[0]["Date"] > self.p.start_date or historical[-1]["Date"] < self.p.end_date:
+                    updated_historical = format_klines(self.extract_klines(), 1).to_dict("records")
+                    mongo_driver.update_ticker(self.p.symbol, self.format_timeframe(), updated_historical)
+            filtered_data = filter_historical(self.p.start_date, self.p.end_date, historical)
+            return PandasData(dataname=filtered_data, timeframe=self.p.timeframe, compression=self.p.compression)
+        title = self.get_file_title()
 
-        filtered_data = filter_historical(self.p.start_date, self.p.end_date, historical)
-        return PandasData(dataname=filtered_data, timeframe=self.p.timeframe, compression=self.p.compression)
+        if not os.path.isfile(f"data/datasets/{title}"):
+            klines = self.extract_klines()
+            klines_formatted = format_klines(klines)
+            klines_formatted.to_csv(f"data/datasets/{title}")
+        return CustomOHLC(dataname=f"data/datasets/{title}", timeframe=self.p.timeframe, compression=self.p.compression, sessionstart=self.p.start_date)
 
     def generate_live_datafeed(self):
         """ Explicit """
 
-        with open("config.yml") as file:
+        with open("config/config.yml") as file:
             data = yaml.safe_load(file)
         key, secret = data["api_key"], data["api_secret"]
 
@@ -94,7 +102,7 @@ class DatafeedGenerator:
     def extract_klines(self):
         """ Extract klines from params """
 
-        with open("config.yml") as file:
+        with open("config/config.yml") as file:
             data = yaml.safe_load(file)
 
         # Connection to API
@@ -119,7 +127,7 @@ class DatafeedGenerator:
         return f"{self.p.compression}{timeframes_mapper[self.p.timeframe]}"
 
 
-def format_klines(klines):
+def format_klines(klines, mode=0):
     # Generate a nice DataFrame from Binance raw data
 
     columns = 'open_time open high low close volume close_time quote_asset_volume number_of_trades taker_buy_base_asset_volume taker_buy_quote_asset_volume ignore'.split(
@@ -133,6 +141,9 @@ def format_klines(klines):
     sub_df['open_time'] = temp_serie
 
     sub_df.columns = 'Date, Open, High, Low, Close, Volume'.split(', ')
+    if mode:
+        return sub_df
+    sub_df.set_index('Date', inplace=True)
 
     return sub_df
 
