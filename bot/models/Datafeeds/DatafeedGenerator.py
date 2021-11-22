@@ -1,12 +1,13 @@
 import backtrader as bt
 import os
-from models.Datafeeds.CustomOHLC import CustomOHLC as CustomOHLC
 import yaml
 from binance import Client
 import pandas as pd
 import datetime as dt
 from ccxtbt import CCXTStore
 import time
+from models.MongoDriver import MongoDriver as MongoDriver
+from backtrader.feeds.pandafeed import PandasData as PandasData
 
 # Useful to format timeframe and compression
 timeframes_mapper = {
@@ -41,18 +42,27 @@ class DatafeedGenerator:
     def generate_backtesting_datafeed(self):
         """ Generate datafeed for backtesting purpose """
 
-        title = self.get_file_title()
+        mongo_driver = MongoDriver()
+        mongo_driver.connect()
+        if not mongo_driver.get_ticker(self.p.symbol, self.format_timeframe()):
+            historical = format_klines(self.extract_klines()).to_dict("records")
+            mongo_driver.add_ticker(self.p.symbol, self.format_timeframe(), historical)
+        else:
+            historical = mongo_driver.get_historical(self.p.symbol, self.format_timeframe())
+            if historical[0]["Date"] > self.p.start_date or historical[-1]["Date"] < self.p.end_date:
+                updated_historical = format_klines(self.extract_klines()).to_dict("records")
+                mongo_driver.update_ticker(self.p.symbol, self.format_timeframe(), updated_historical)
 
-        if not os.path.isfile(f"data/datasets/{title}"):
-            klines = self.extract_klines()
-            klines_formatted = format_klines(klines)
-            klines_formatted.to_csv(f"data/datasets/{title}")
-        return CustomOHLC(dataname=f"data/datasets/{title}", timeframe=self.p.timeframe, compression=self.p.compression, sessionstart=self.p.start_date)
+        historical = mongo_driver.get_historical(self.p.symbol, self.format_timeframe())
+        mongo_driver.close()
+
+        filtered_data = filter_historical(self.p.start_date, self.p.end_date, historical)
+        return PandasData(dataname=filtered_data, timeframe=self.p.timeframe, compression=self.p.compression)
 
     def generate_live_datafeed(self):
         """ Explicit """
 
-        with open("config/config.yml") as file:
+        with open("config.yml") as file:
             data = yaml.safe_load(file)
         key, secret = data["api_key"], data["api_secret"]
 
@@ -84,7 +94,7 @@ class DatafeedGenerator:
     def extract_klines(self):
         """ Extract klines from params """
 
-        with open("config/config.yml") as file:
+        with open("config.yml") as file:
             data = yaml.safe_load(file)
 
         # Connection to API
@@ -123,7 +133,6 @@ def format_klines(klines):
     sub_df['open_time'] = temp_serie
 
     sub_df.columns = 'Date, Open, High, Low, Close, Volume'.split(', ')
-    sub_df.set_index('Date', inplace=True)
 
     return sub_df
 
@@ -131,3 +140,13 @@ def format_klines(klines):
 def epoch_to_datetime(epoch):
     epoch /= 1000
     return dt.datetime.fromtimestamp(epoch)
+
+
+def filter_historical(start, end, historical):
+    df = pd.DataFrame()
+    df = df.from_records(historical)
+    after = df[df["Date"] >= start]
+    before = df[df["Date"] <= end]
+    between = after.merge(before)
+    between.set_index(["Date"], inplace=True)
+    return between
