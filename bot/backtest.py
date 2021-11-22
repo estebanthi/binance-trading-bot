@@ -17,13 +17,16 @@ from models.Strategies.BracketStrats.BollingerBandsDivergences import \
     BollingerBandsDivergence as BollingerBandsDivergence
 from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 from models.Sizers.FixedSizer import FixedSizer as FixedSizer
+from models.Analyzers.AnnualReturn import AnnualReturn
+from models.Analyzers.PyFolio import PyFolio
+from models.Analyzers.GoodStrat import GoodStrat
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
 strategies = [PSAR_EMA(risk_reward_ratio=13, psar_af=0.125, psar_afmax=0.35)]
-analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
+analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100), AnnualReturn(), GoodStrat()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -34,8 +37,8 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BTC/EUR",
-    start_date="2020/01/01 0:0:0",
-    end_date="2021/11/01 0:0:0",
+    start_date="2020/01/10 0:0:0",
+    end_date="2021/11/20 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
     compression=240,
     strategies=strategies,
@@ -56,4 +59,4 @@ result_analyzer = ResultAnalyzer(result)
 pnls = result_analyzer.get_pnls()
 print(pnls)
 
-print(result[0][0].analyzers.percent_getter.get_analysis())
+print(result[0][0].analyzers.good_strat.get_analysis())

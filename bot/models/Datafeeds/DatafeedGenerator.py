@@ -102,7 +102,7 @@ class DatafeedGenerator:
     def extract_klines(self):
         """ Extract klines from params """
 
-        with open("config/config.yml") as file:
+        with open("config.yml") as file:
             data = yaml.safe_load(file)
 
         # Connection to API
