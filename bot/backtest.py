@@ -19,14 +19,14 @@ from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 from models.Sizers.FixedSizer import FixedSizer as FixedSizer
 from models.Analyzers.AnnualReturn import AnnualReturn
 from models.Analyzers.PyFolio import PyFolio
-from models.Analyzers.GoodStrat import GoodStrat
+from models.Analyzers.StratQuality import StratQuality
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
 strategies = [PSAR_EMA(risk_reward_ratio=13, psar_af=0.125, psar_afmax=0.35)]
-analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100), AnnualReturn(), GoodStrat()]
+analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100), AnnualReturn(), StratQuality()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -59,4 +59,4 @@ result_analyzer = ResultAnalyzer(result)
 pnls = result_analyzer.get_pnls()
 print(pnls)
 
-print(result[0][0].analyzers.good_strat.get_analysis())
+print(result[0][0].analyzers.strat_quality.get_analysis())
