@@ -25,6 +25,7 @@ Using crypto historical data, backtest your strategies, optimize the parameters 
 * **Visualize** the results on a chart you can configure.
 * Automatic **live trading** with fake or real money, using Binance API. 
 * **Telegram notifications** when the bot does specific actions (entering a trade, loading data, ...)
+* **MongoDB support** if you don't want to store data locally.
 
 
 
@@ -62,15 +63,16 @@ To use the bot, just go in the folder ```bot``` and create your first run script
 
 ### Create and configure the config file
 
-First, create a ```config.yml``` file in the folder ```config```. Fill it like the following :
+First, create a ```config.yml``` in the `bot` file. Fill it like the following :
 
 ```yaml
 api_key: "<YOUR BINANCE API KEY>"
 api_secret: "<YOUR BINANCE API SECRET>"
 
-telegram_token: "<YOUR TELEGRAM BOT TOKEN>"
-
+telegram_token: "<YOUR TELEGRAM BOT TOKEN>" # If you want to use Telegram
 user: "<YOUR TELEGRAM USER ID>"
+
+mongo_url: "<YOUR MONGO DATABASE URL>" # If you want to use MongoDB for storing data
 ```
 
 If you don't know how to use Binance API, you can check it on https://www.binance.com/en-NG/support/faq/360002502072.
@@ -87,7 +89,7 @@ First, you need to decide what you want to use with the engine. So, for example,
 # (you can use multiple strategies at the same time for backtesting or live trading)
 strategies = [TripleEMA(logging=True), MACD_Crossings(period_me1=12)]
 sizer = DefaultSizer() # you can use only one sizer (it's logic !)
-analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
+analyzers = [TradeAnalyzer(), Returns()]
 observers = [ValueObserver()]
 timers = [StopSession(when=dt.time(0), weekdays=[7])]
 ```
@@ -98,7 +100,7 @@ timers = [StopSession(when=dt.time(0), weekdays=[7])]
 
 You can use some more features, like a writer to write details about your session into a file, or a TelegramBot to be notified on Telegram.
 
-```
+```python
 telegram_bot = TelegramBot()
 write_to = "results.txt"
 ```
@@ -109,7 +111,7 @@ write_to = "results.txt"
 
 ```python
 config = EngineConfiguration(
-	mode="BACKTEST", # Chose between BACKTEST, PAPER or LIVE
+	mode="BACKTEST", # Chose between BACKTEST, OPTIMIZE, PAPER or LIVE
     symbol="BTC/EUR", # What you want to trade
     start_date="2021/01/01 00:00:00", # Session start date (format YYYY/MM/DD HH:MM:SS)
     end_date=dt.datetime.now(), # Session end
@@ -175,4 +177,5 @@ Be careful when using multiple strategies with multiple timeframes, because it c
 - [x] Rename strategies
 - [x] Add Telegram notifications
 - [ ] Modify some indicators plotlines
+- [ ] Add MongoDB results support
 
