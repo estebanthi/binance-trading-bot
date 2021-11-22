@@ -1,15 +1,13 @@
-import backtrader as bt
-from models.Engine.EngineConfiguration import EngineConfiguration as EngineConfiguration
 from models.Datafeeds.DatafeedGenerator import DatafeedGenerator as DatafeedGenerator
 from models.Datafeeds.DatafeedParams import DatafeedParams as DatafeedParams
+from models.Engine.EngineCerebro import EngineCerebro as EngineCerebro
+from models.Timers.StopSession import StopSession as StopSession
+
+import backtrader as bt
+from ccxtbt import CCXTStore
+import pickle
 import yaml
 import time
-from ccxtbt import CCXTStore
-from models.Engine.EngineCerebro import EngineCerebro as EngineCerebro
-import datetime as dt
-from models.Timers.StopSession import StopSession as StopSession
-from backtrader.plot import PlotScheme as PlotScheme
-import pickle
 
 
 def get_secrets(path='config.yml'):
@@ -59,6 +57,7 @@ class Engine:
             else:
                 self.cerebro.addstrategy(strategy.strategy, **strategy.parameters)
 
+        # Check if a resampling is needed, and resample in that case
         self.resample_datafeed(datafeed)
 
         try:
@@ -75,8 +74,8 @@ class Engine:
 
             else:
                 results = self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
-                                       stdstats=self.config.stdstats, symbol=self.config.symbol,
-                                       path_to_result=self.config.write_to, **self.config.kwargs)
+                                           stdstats=self.config.stdstats, symbol=self.config.symbol,
+                                           path_to_result=self.config.write_to, **self.config.kwargs)
 
             if self.config.save_results:
                 with open(f"data/backtesting_results/{self.config.save_results}", "wb") as file:
@@ -84,6 +83,7 @@ class Engine:
             return results
 
         except Exception as e:
+            # Catch errors, and wait 5 seconds before retrying
             print(f"Error : {e}\nRetry in 5 seconds")
             time.sleep(5)
             self.run()

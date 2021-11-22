@@ -15,6 +15,27 @@ from backtrader.strategy import Strategy, SignalStrategy
 
 
 class EngineCerebro(bt.Cerebro):
+    """
+    The custom cerebro used by the bot
+    The cerebro is like the brain
+
+
+    Params :
+
+        - mode : str
+            Cerebro's mode, default is "BACKTEST"
+
+        - telegram_bot : TelegramBot
+            TelegramBot instance, default is None
+
+        - symbol : str
+            Symbol, default is None
+
+        - path_to_result : str
+            Where to save result, default is None
+
+    """
+
     params = (
         ("mode", "BACKTEST"),
         ("telegram_bot", None),
@@ -24,18 +45,18 @@ class EngineCerebro(bt.Cerebro):
 
     def notify_timer(self, timer, when, *args, **kwargs):
         timername = kwargs.get("timername")
-
         if timername == "stop_timer":
             kwargs.get("function")(cerebro=self)
 
     def notify_data(self, data, status, *args, **kwargs):
         if status == data.LIVE:
             if self.p.telegram_bot:
-                self.p.telegram_bot.send_message(f"--- DATA LOADED ---\n--- RUNNING {self.p.mode} MODE ---\n--- SYMBOL {self.p.symbol} ---")
+                self.p.telegram_bot.send_message(
+                    f"--- DATA LOADED ---\n--- RUNNING {self.p.mode} MODE ---\n--- SYMBOL {self.p.symbol} ---")
                 self.p.telegram_bot.send_message(f"From {self.datas[0].p.fromdate.strftime('%m/%d/%Y, %H:%M:%S')}")
 
     def run(self, **kwargs):
-        '''The core method to perform backtesting. Any ``kwargs`` passed to it
+        """The core method to perform backtesting. Any ``kwargs`` passed to it
         will affect the value of the standard parameters ``Cerebro`` was
         instantiated with.
 
@@ -48,7 +69,7 @@ class EngineCerebro(bt.Cerebro):
 
           - For Optimization: a list of lists which contain instances of the
             Strategy classes added with ``addstrategy``
-        '''
+        """
         self._event_stop = False  # Stop is requested
 
         if not self.datas:
@@ -173,13 +194,14 @@ class EngineCerebro(bt.Cerebro):
         return self.runstrats
 
     def optstrategy(self, strategy, *args, **kwargs):
+        # Default method called
         super().optstrategy(strategy, *args, **kwargs)
 
+        # Then, whe count the number of strats
         self.strats[0], iter = tee(self.strats[0])
-
         counter = 0
         for strat in iter:
-            counter+=1
+            counter += 1
         self.counter = counter
 
     def __init__(self):
