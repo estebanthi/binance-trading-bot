@@ -5,6 +5,10 @@ from tabulate import tabulate
 class ResultAnalyzer:
     """
     A class to analyze backtesting results.
+
+    Warning : it's not an usual analyzer, you can't add it to Engine
+    You have to instantiate it after results have been created
+
     """
     
     def __init__(self, result):
@@ -57,9 +61,8 @@ class ResultAnalyzer:
             
     def print_trade_list(self):
         """
-        Print trade list.
-        Requires tradehistory = True in cerebro.run
-        and TradeList analyzer added.
+        Print trade list
+        Requires tradehistory and TradeList analyzer in Engine
 
         Returns
         -------

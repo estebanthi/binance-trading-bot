@@ -3,10 +3,10 @@ import backtrader as bt
 from dataclasses import field
 
 
-class Core(bt.Analyzer):
+class TradeList_analyzer(bt.Analyzer):
     """
     An analyzer to print data under tabulate format.
-    Example : 
+    Example : print(tabulate(results[0][0].analyzers.trade_list.get_analysis))
         
      chng%    pnl%    mae%    pricein  ticker      pnl/bar    size     value    mfe%    priceout       pnl    cumpnl  dateout       ref    nbars  dir    datein
 -------  ------  ------  ---------  --------  ---------  ------  --------  ------  ----------  --------  --------  ----------  -----  -------  -----  ----------
@@ -101,6 +101,9 @@ class Core(bt.Analyzer):
 
 @dataclass
 class TradeList:
-    """ Print infos in tradelist format """
-    analyzer: Core = Core
+    """
+    Print infos in tradelist format
+
+    """
+    analyzer: TradeList_analyzer = TradeList_analyzer
     parameters: dict = field(default_factory=lambda:{'_name':"trade_list"})

@@ -3,13 +3,13 @@ import backtrader as bt
 from dataclasses import field
 
 
-class Core(bt.Analyzer):
+class PercentGetter_analyzer(bt.Analyzer):
     """
     An analyzer to get trades profits percents.
     
     Params :   
         - multiplier : int
-            Multiplier of percents. Default is 1.
+            Multiplier of percents. Default is 1. Put it to 100 to get percents in human-readable style
     """
 
     params = (('multiplier', 1),)
@@ -156,7 +156,11 @@ class Core(bt.Analyzer):
 
 @dataclass
 class PercentGetter:
-    """ Get percents on the trade period """
-    def __init__(self, multiplier=Core.params.multiplier):
-        self.analyzer = Core
+    """
+    Get percents on the trade period
+    Default name is "percent_getter"
+
+    """
+    def __init__(self, multiplier=PercentGetter_analyzer.params.multiplier):
+        self.analyzer = PercentGetter_analyzer
         self.parameters = {"multiplier":multiplier, "_name":"percent_getter"}
