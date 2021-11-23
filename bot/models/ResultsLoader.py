@@ -1,8 +1,13 @@
 import pickle
-from models.Strategies.SimpleStrats.TripleEMA import TripleEMA as TripleEMA
 
 
 class ResultsLoader:
+    """
+    Useful for loading results
+
+    If it generates errors, add strategies in imports
+
+    """
 
     def __init__(self):
         self.default_path = f"data/backtesting_results/"
