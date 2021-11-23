@@ -6,6 +6,12 @@ from dataclasses import dataclass
 
 
 class BollingerBandsDivergence_strat(BracketStratSkeleton):
+    """
+    BollingerBandsDivergence strategy
+    We're looking for divergences to enter a trade
+
+    """
+
     params = (
         ('bb_period', 20),
         ('devfactor', 2),
