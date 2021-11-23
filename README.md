@@ -173,9 +173,10 @@ Be careful when using multiple strategies with multiple timeframes, because it c
 
 ## To Do
 
-- [ ] Document the code
+- [x] Document the code
 - [x] Rename strategies
 - [x] Add Telegram notifications
+- [x] Add some development documentation
 - [ ] Modify some indicators plotlines
 - [ ] Add MongoDB results support
 
