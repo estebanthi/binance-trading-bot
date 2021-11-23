@@ -81,7 +81,7 @@ class DatafeedGenerator:
 
         """
 
-        with open("config/config.yml") as file:
+        with open("config.yml") as file:
             data = yaml.safe_load(file)
         key, secret = data["api_key"], data["api_secret"]
 
