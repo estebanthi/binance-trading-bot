@@ -9,6 +9,7 @@ from ccxtbt import CCXTStore
 import time
 from models.MongoDriver import MongoDriver as MongoDriver
 from backtrader.feeds.pandafeed import PandasData as PandasData
+import ccxt
 
 # Useful to format timeframe and compression
 timeframes_mapper = {
@@ -71,7 +72,8 @@ class DatafeedGenerator:
         if not os.path.isfile(f"data/datasets/{title}"):
             klines = self.extract_klines()
             klines_formatted = format_klines(klines)
-            klines_formatted.to_csv(f"data/datasets/{title}")
+            filtered_data = filter_historical(self.p.start_date, self.p.end_date, klines_formatted)
+            filtered_data.to_csv(f"data/datasets/{title}")
         return CustomOHLC(dataname=f"data/datasets/{title}", timeframe=self.p.timeframe, compression=self.p.compression,
                           sessionstart=self.p.start_date)
 
@@ -119,18 +121,9 @@ class DatafeedGenerator:
 
         """
 
-        with open("config.yml") as file:
-            data = yaml.safe_load(file)
-
-        # Connection to API
-        api_key, api_secret = data["api_key"], data["api_secret"]
-        client = Client(api_key, api_secret)
-
-        timeframe = self.format_timeframe()
-        start, end = self.p.start_date, self.p.end_date
-        symbol = self.p.symbol.replace("/", "")
-
-        return client.get_historical_klines(symbol=symbol, interval=timeframe, start_str=str(start), end_str=str(end))
+        exchange = ccxt.bitfinex()
+        timestamp = dt.datetime.timestamp(self.p.start_date)
+        return exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=timestamp, limit=10000)
 
     def format_timeframe(self):
         """
@@ -153,22 +146,15 @@ def format_klines(klines, mode=0):
 
     """
 
-    columns = 'open_time open high low close volume close_time quote_asset_volume number_of_trades taker_buy_base_asset_volume taker_buy_quote_asset_volume ignore'.split(
+    columns = 'Date Open High Low Close Volume'.split(
         ' ')
 
     df = pd.DataFrame(klines, columns=columns)
     df = df.astype('float64')
-    sub_df = df[['open_time', 'open', 'high', 'low', 'close', 'quote_asset_volume']]
 
-    temp_serie = [epoch_to_datetime(row[1]['open_time']) for row in df.iterrows()]
-    sub_df['open_time'] = temp_serie
+    df.loc[:, "Date"] = df.loc[:, "Date"].apply(epoch_to_datetime)
 
-    sub_df.columns = 'Date, Open, High, Low, Close, Volume'.split(', ')
-    if mode:  # If we use MongoDB, we don't want to set index
-        return sub_df
-    sub_df.set_index('Date', inplace=True)
-
-    return sub_df
+    return df
 
 
 def epoch_to_datetime(epoch):
