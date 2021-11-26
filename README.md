@@ -178,5 +178,5 @@ Be careful when using multiple strategies with multiple timeframes, because it c
 - [x] Add Telegram notifications
 - [x] Add some development documentation
 - [ ] Modify some indicators plotlines
-- [ ] Add MongoDB results support
+- [x] Add MongoDB results support
 
