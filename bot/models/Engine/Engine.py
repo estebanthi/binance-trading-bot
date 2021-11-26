@@ -8,6 +8,7 @@ from ccxtbt import CCXTStore
 import pickle
 import yaml
 import time
+from models.MongoDriver import MongoDriver
 
 
 def get_secrets(path='config.yml'):
@@ -65,19 +66,32 @@ class Engine:
                 results = self.cerebro.run(maxcpus=1, optreturn=False, mode=self.config.mode, tradehistory=True,
                                            stdstats=self.config.stdstats,
                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
-                                           path_to_result=self.config.write_to, **self.config.kwargs)
+                                           **self.config.kwargs)
             elif self.config.mode == "OPTIMIZE":
                 results = self.cerebro.run(maxcpus=1, optreturn=True, mode=self.config.mode,
                                            stdstats=self.config.stdstats,
                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
-                                           path_to_result=self.config.write_to, **self.config.kwargs)
+                                           **self.config.kwargs)
 
             else:
                 results = self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
                                            stdstats=self.config.stdstats, symbol=self.config.symbol,
-                                           path_to_result=self.config.write_to, **self.config.kwargs)
+                                           **self.config.kwargs)
 
             if self.config.save_results:
+                with open("config.yml", "r") as file:
+                    data = yaml.safe_load(file)
+
+                if data["mongo_url"]:  # If MongoDB is used
+                    mongo_driver = MongoDriver()
+                    mongo_driver.connect()
+                    results_bytes = pickle.dumps(results)
+                    if not mongo_driver.get_result(self.config.save_results):
+                        mongo_driver.add_result(self.config.save_results, results_bytes)
+                    else:
+                        mongo_driver.update_result(self.config.save_results, results_bytes)
+                    return results
+
                 with open(f"data/backtesting_results/{self.config.save_results}", "wb") as file:
                     pickle.dump(results, file)
             return results

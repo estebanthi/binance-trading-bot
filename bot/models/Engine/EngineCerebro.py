@@ -31,16 +31,12 @@ class EngineCerebro(bt.Cerebro):
         - symbol : str
             Symbol, default is None
 
-        - path_to_result : str
-            Where to save result, default is None
-
     """
 
     params = (
         ("mode", "BACKTEST"),
         ("telegram_bot", None),
         ("symbol", None),
-        ("path_to_result", None)
     )
 
     def notify_timer(self, timer, when, *args, **kwargs):

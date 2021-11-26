@@ -77,3 +77,34 @@ class MongoDriver:
         """
         self.client.close()
         print("MongoDriver disconnected")
+
+    def add_result(self, result_name, object):
+        """
+        Add result object to db
+        """
+
+        db = self.client.tradingbot
+        collection = db.Results
+        collection.insert_one({"name": result_name, "object": object})
+
+    def get_result(self, result_name):
+        """
+        Get a result object from his name
+
+        """
+
+        db = self.client.tradingbot
+        collection = db.Results
+
+        return collection.find_one({"name": result_name})
+
+    def update_result(self, result_name, object):
+        """
+        Update a result object
+
+        """
+
+        db = self.client.tradingbot
+        collection = db.Results
+
+        collection.update({"name": result_name}, {"$set": {"object": object}})

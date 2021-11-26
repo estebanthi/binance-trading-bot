@@ -24,9 +24,9 @@ from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [PSAR_EMA(logging=False, risk_reward_ratio=np.arange(13, 20, 2), psar_period=2,
-                       psar_af=np.linspace(0.125,0.175,5),
-                       psar_afmax=np.linspace(0.35,0.45,5))]
+strategies = [PSAR_EMA(logging=False, risk_reward_ratio=np.arange(13, 15, 2), psar_period=2,
+                       psar_af=np.linspace(0.125,0.175,2),
+                       psar_afmax=np.linspace(0.35,0.45,2))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
