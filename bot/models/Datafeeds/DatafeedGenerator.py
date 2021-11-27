@@ -122,8 +122,9 @@ class DatafeedGenerator:
         """
 
         exchange = ccxt.bitfinex()
-        timestamp = dt.datetime.timestamp(self.p.start_date)
-        return exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=timestamp, limit=10000)
+        timestamp = dt.datetime.timestamp(self.p.start_date)*1000
+        data = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=timestamp, limit=10000)
+        return data
 
     def format_timeframe(self):
         """
@@ -140,7 +141,7 @@ class DatafeedGenerator:
         return f"{self.p.compression}{timeframes_mapper[self.p.timeframe]}"
 
 
-def format_klines(klines, mode=0):
+def format_klines(klines):
     """
     Generate a nice DataFrame from Binance raw data
 
@@ -153,7 +154,6 @@ def format_klines(klines, mode=0):
     df = df.astype('float64')
 
     df.loc[:, "Date"] = df.loc[:, "Date"].apply(epoch_to_datetime)
-
     return df
 
 
@@ -170,6 +170,7 @@ def filter_historical(start, end, historical):
     df = pd.DataFrame()
     df = df.from_records(historical)
     after = df[df["Date"] >= start]
+    print(print(df['Date']))
     before = df[df["Date"] <= end]
     between = after.merge(before)
     between.set_index(["Date"], inplace=True)

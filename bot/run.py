@@ -36,15 +36,15 @@ write_to = "recap.txt"
 # Instantiate the engine
 engine = Engine()
 
+
 # Configure the engine
 config = EngineConfiguration(
     mode="PAPER",
     symbol="BTC/EUR",
-    timedelta=dt.timedelta(minutes=620),
+    timedelta=dt.timedelta(minutes=50),
     timeframe=bt.TimeFrame.Minutes,
-    compression=1, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
+    compression=240, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
     write_to=write_to, stdstats=True, observers=observers, sizer=sizer,
-    timers=timers
 )
 engine.set_configuration(config)
 

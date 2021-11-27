@@ -25,8 +25,8 @@ from models.Analyzers.StratQuality import StratQuality
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [PSAR_EMA(risk_reward_ratio=13, psar_af=0.125, psar_afmax=0.35)]
-analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100), AnnualReturn(), StratQuality()]
+strategies = [TripleEMA()]
+analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -37,10 +37,10 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BTC/EUR",
-    start_date="2018/01/10 0:0:0",
-    end_date="2020/11/20 0:0:0",
-    timeframe=bt.TimeFrame.Days,
-    compression=1,
+    start_date="2021/11/10 0:0:0",
+    end_date="2021/11/20 0:0:0",
+    timeframe=bt.TimeFrame.Minutes,
+    compression=5,
     strategies=strategies,
     analyzers=analyzers,
     stdstats=True,
@@ -58,5 +58,3 @@ engine.plot()
 result_analyzer = ResultAnalyzer(result)
 pnls = result_analyzer.get_pnls()
 print(pnls)
-
-print(result[0][0].analyzers.strat_quality.get_analysis())

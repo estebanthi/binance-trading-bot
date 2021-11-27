@@ -24,9 +24,7 @@ from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [PSAR_EMA(logging=False, risk_reward_ratio=np.arange(13, 15, 2), psar_period=2,
-                       psar_af=np.linspace(0.125,0.175,2),
-                       psar_afmax=np.linspace(0.35,0.45,2))]
+strategies = [BollingerBandsDivergence(stop_loss=np.linspace(0.2,0.5,5), risk_reward_ratio=np.linspace(0.4,2,5), bb_period=range(10,30,2))]
 analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -41,17 +39,17 @@ engine = Engine()
 config = EngineConfiguration(
     mode="OPTIMIZE",
     symbol="BTC/EUR",
-    start_date="2020/01/01 0:0:0",
-    end_date="2021/11/01 0:0:0",
+    start_date="2021/11/01 0:0:0",
+    end_date="2021/11/10 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
-    compression=240,
+    compression=5,
     strategies=strategies,
     analyzers=analyzers,
     stdstats=True,
     observers=observers,
     sizer=sizer,
     telegram_bot=telegram_bot,
-    save_results="psar_ema_optimized_4h.dat"
+    save_results="bb_scalping.dat"
 )
 engine.set_configuration(config)
 
