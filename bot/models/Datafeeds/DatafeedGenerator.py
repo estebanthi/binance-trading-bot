@@ -124,6 +124,13 @@ class DatafeedGenerator:
         exchange = ccxt.bitfinex()
         timestamp = dt.datetime.timestamp(self.p.start_date)*1000
         data = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=timestamp, limit=10000)
+        while data[-1][0] < dt.datetime.timestamp(self.p.end_date)*1000:
+            data2 = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=data[-1][0], limit=10000)
+            for i in range(len(data2)):
+                if i !=0:
+                    data.append(data2[i])
+        for i in range(len(data)):
+            data[i] = tuple(data[i])
         return data
 
     def format_timeframe(self):
@@ -170,7 +177,6 @@ def filter_historical(start, end, historical):
     df = pd.DataFrame()
     df = df.from_records(historical)
     after = df[df["Date"] >= start]
-    print(print(df['Date']))
     before = df[df["Date"] <= end]
     between = after.merge(before)
     between.set_index(["Date"], inplace=True)

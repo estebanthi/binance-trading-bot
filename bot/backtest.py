@@ -25,7 +25,7 @@ from models.Analyzers.StratQuality import StratQuality
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [TripleEMA()]
+strategies = [BollingerBandsDivergence(stop_loss=6, risk_reward_ratio=1, bb_period=20, logging=True)]
 analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -37,7 +37,7 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BTC/EUR",
-    start_date="2021/11/10 0:0:0",
+    start_date="2021/09/01 0:0:0",
     end_date="2021/11/20 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
     compression=5,
@@ -46,6 +46,7 @@ config = EngineConfiguration(
     stdstats=True,
     observers=observers,
     sizer=sizer,
+    commission=0.075
 )
 engine.set_configuration(config)
 
