@@ -6,8 +6,7 @@ from models.Strategies.SimpleStrats import TripleEMA
 from models.Strategies.BracketStrats import BollingerBandsDivergences
 
 loader = ResultsLoader()
-results = loader.load("bb_scalping.dat")
+results = loader.load("multistrat.dat")
 
 analyzer = ResultAnalyzer(results)
-print(analyzer.get_pnls())
-
+analyzer.pretty_pnls()

@@ -24,7 +24,7 @@ from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [BollingerBandsDivergence(), TripleEMA()]
+strategies = [BollingerBandsDivergence(bb_period=[10,20])]
 analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -39,7 +39,7 @@ engine = Engine()
 config = EngineConfiguration(
     mode="OPTIMIZE",
     symbol="BTC/EUR",
-    start_date="2021/01/01 0:0:0",
+    start_date="2021/10/01 0:0:0",
     end_date="2021/11/01 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
     compression=5,
