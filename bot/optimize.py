@@ -24,7 +24,7 @@ from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [BollingerBandsDivergence(stop_loss=1.8, risk_reward_ratio=np.linspace(3,15,10), bb_period=range(5,25,5), trend_ema_period=range(80,200,30))]
+strategies = [BollingerBandsDivergence(), TripleEMA()]
 analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -49,7 +49,7 @@ config = EngineConfiguration(
     observers=observers,
     sizer=sizer,
     telegram_bot=telegram_bot,
-    save_results="bb_scalping.dat",
+    save_results="multistrat.dat",
     commission=0.075
 )
 engine.set_configuration(config)

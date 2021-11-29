@@ -55,13 +55,13 @@ class DatafeedGenerator:
             mongo_driver.connect()
             if not mongo_driver.get_ticker(self.p.symbol, self.format_timeframe()):
                 # Ticker not in database, we add it
-                historical = format_klines(self.extract_klines(), 1).to_dict("records")
+                historical = format_klines(self.extract_klines()).to_dict("records")
                 mongo_driver.add_ticker(self.p.symbol, self.format_timeframe(), historical)
             else:
                 historical = mongo_driver.get_historical(self.p.symbol, self.format_timeframe())
                 if historical[0]["Date"] > self.p.start_date or historical[-1]["Date"] < self.p.end_date:
                     # Dates no corresponding, we update historical
-                    updated_historical = format_klines(self.extract_klines(), 1).to_dict("records")
+                    updated_historical = format_klines(self.extract_klines()).to_dict("records")
                     mongo_driver.update_ticker(self.p.symbol, self.format_timeframe(), updated_historical)
             # Filter with dates
             filtered_data = filter_historical(self.p.start_date, self.p.end_date, historical)
