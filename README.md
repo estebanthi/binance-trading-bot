@@ -130,6 +130,7 @@ config = EngineConfiguration(
     write_to=write_to, # If you want to save results file
     debug=True, # If you want to debug the datafeed
     stdstats=True, # For default chart plotting
+    exchange=ccxt.binance() # Exchange you want to use for data extraction (default is bitfinex)
 )
 ```
 

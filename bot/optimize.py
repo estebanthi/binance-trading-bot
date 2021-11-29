@@ -24,7 +24,7 @@ from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [BollingerBandsDivergence(bb_period=[10,20])]
+strategies = [StochMacdRsi()]
 analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)

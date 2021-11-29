@@ -108,7 +108,7 @@ class Engine:
                                          timeframe=self.config.timeframe,
                                          end_date=self.config.end_date, start_date=self.config.start_date,
                                          compression=self.config.compression, timedelta=self.config.timedelta,
-                                         debug=self.config.debug)
+                                         debug=self.config.debug, exchange=self.config.exchange)
         datafeed_generator = DatafeedGenerator(datafeed_params)
         return datafeed_generator.generate_datafeed()
 

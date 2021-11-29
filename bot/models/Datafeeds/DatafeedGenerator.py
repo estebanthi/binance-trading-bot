@@ -120,9 +120,8 @@ class DatafeedGenerator:
         Extract klines corresponding to params
 
         """
-
-        exchange = ccxt.bitfinex()
-        timestamp = dt.datetime.timestamp(self.p.start_date)*1000
+        exchange = self.p.exchange
+        timestamp = int(dt.datetime.timestamp(self.p.start_date)*1000)
         data = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=timestamp, limit=10000)
         while data[-1][0] < dt.datetime.timestamp(self.p.end_date)*1000:
             data2 = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=data[-1][0], limit=10000)

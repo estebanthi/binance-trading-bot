@@ -5,6 +5,7 @@ import datetime as dt
 from models.Sizers.Sizer import Sizer as Sizer
 from models.Sizers.DefaultSizer import DefaultSizer as DefaultSizer
 from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
+import ccxt
 
 
 @dataclass
@@ -31,4 +32,5 @@ class EngineConfiguration:
     strategies: list = field(default_factory=list)  # Strategies list
     telegram_bot: TelegramBot = None  # TelegramBot
     save_results: str = None  # Results filename if you want to save
+    exchange: ccxt.bitfinex or ccxt.binance = ccxt.bitfinex()  # Exchange to use
 

@@ -20,12 +20,13 @@ from models.Sizers.FixedSizer import FixedSizer as FixedSizer
 from models.Analyzers.AnnualReturn import AnnualReturn
 from models.Analyzers.PyFolio import PyFolio
 from models.Analyzers.StratQuality import StratQuality
+import ccxt
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [BollingerBandsDivergence(stop_loss=1.8, risk_reward_ratio=7, bb_period=20, logging=True)]
+strategies = [StochMacdRsi()]
 analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -36,8 +37,8 @@ engine = Engine()
 # Configure the engine
 config = EngineConfiguration(
     mode="BACKTEST",
-    symbol="BTC/EUR",
-    start_date="2021/01/01 0:0:0",
+    symbol="BNB/EUR",
+    start_date="2021/08/01 0:0:0",
     end_date="2021/11/01 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
     compression=5,
@@ -46,7 +47,8 @@ config = EngineConfiguration(
     stdstats=True,
     observers=observers,
     sizer=sizer,
-    commission=0.075
+    commission=0.075,
+    exchange=ccxt.binance()
 )
 engine.set_configuration(config)
 
@@ -57,5 +59,4 @@ result = engine.run()
 engine.plot()
 
 result_analyzer = ResultAnalyzer(result)
-pnls = result_analyzer.get_pnls()
-print(pnls)
+result_analyzer.pretty_pnls()

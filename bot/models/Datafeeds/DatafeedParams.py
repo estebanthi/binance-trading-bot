@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import datetime as dt
 import backtrader as bt
+import ccxt
 
 
 @dataclass
@@ -35,6 +36,9 @@ class DatafeedParams:
 
         - debug : bool
             To debug live datafeed, default is False
+
+        - exchange : ccxt.exchange
+            Exchange to use to get data
     """
 
     mode: str
@@ -45,3 +49,4 @@ class DatafeedParams:
     start_date: dt.datetime or str = None
     timedelta: dt.timedelta = None
     debug: bool = False
+    exchange: ccxt.bitfinex or ccxt.binance = ccxt.bitfinex()
