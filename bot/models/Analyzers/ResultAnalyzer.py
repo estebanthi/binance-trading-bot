@@ -45,10 +45,10 @@ class ResultAnalyzer:
         
         else:
             pnls_dict = {}
-            for result in self.result:
+            for result in self.result:  # For loop for iterating in all strats
                 for strat in result:
                     analysis = strat.analyzers.trade_analyzer.get_analysis()
-                    pnl_dict = {
+                    pnl_dict = {    # Default dict if no PNL
                         "total": 0,
                         "average": 0,
                     }
@@ -58,7 +58,7 @@ class ResultAnalyzer:
                             "average": strat.analyzers.trade_analyzer.get_analysis()['pnl']['net']['average'],
                         }
 
-                    key = tuple(
+                    key = tuple(    # Dict's key is a tuple containing strat parameters
                             list(
                                 dict(strat.params._getkwargs()).items()))
 
@@ -79,8 +79,8 @@ class ResultAnalyzer:
         None.
 
         """
-        
-        trade_list = self.result[0].analyzers.trade_list_analyzer.get_analysis()
+
+        trade_list = self.result[0][0].analyzers.trade_list.get_analysis()
         print(tabulate(trade_list, headers="keys"))
 
         to_sum = "chng% pnl% pnl".split()

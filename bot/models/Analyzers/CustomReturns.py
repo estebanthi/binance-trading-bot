@@ -11,7 +11,7 @@ class CustomReturns_analyzer(bt.TimeFrameAnalyzerBase):
 
     timeframes_mapper = {
         bt.TimeFrame.Minutes: 1,
-        bt.TimeFrame.Days: 1440
+        bt.TimeFrame.Days: 1440  # 1440 minutes in one day
     }
 
     def __init__(self):
@@ -21,11 +21,11 @@ class CustomReturns_analyzer(bt.TimeFrameAnalyzerBase):
     def stop(self):
         self._value_end = self.strategy.broker.getvalue()
 
-        self.rtot = self._value_end / self._value_start * 100
-        self.avg_ret = self.rtot / self._tcount
+        self.rtot = self._value_end / self._value_start * 100   # Total returns calculation
+        self.avg_ret = self.rtot / self._tcount                 # Average returns calculation
 
-        self.ann_ret = 525_600 / (self.timeframes_mapper[self.timeframe] * self.compression) * self.avg_ret
-        self.log_ret = math.log(self.ann_ret / 100) * 100
+        self.ann_ret = 525_600 / (self.timeframes_mapper[self.timeframe] * self.compression) * self.avg_ret  # Annualization
+        self.log_ret = math.log(self.ann_ret / 100) * 100  # Log returns calculation
 
     def get_analysis(self):
         """
@@ -41,7 +41,7 @@ class CustomReturns_analyzer(bt.TimeFrameAnalyzerBase):
         }
 
     def _on_dt_over(self):
-        self._tcount += 1  # count the subperiod
+        self._tcount += 1  # Counter incrementing for each iteration
 
 
 @dataclass

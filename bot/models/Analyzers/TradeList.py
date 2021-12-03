@@ -106,4 +106,4 @@ class TradeList:
 
     """
     analyzer: TradeList_analyzer = TradeList_analyzer
-    parameters: dict = field(default_factory=lambda:{'_name':"trade_list"})
+    parameters: dict = field(default_factory=lambda: {'_name': "trade_list"})

@@ -68,13 +68,13 @@ class Engine:
                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
                                            **self.config.kwargs)
             elif self.config.mode == "OPTIMIZE":
-                results = self.cerebro.run(maxcpus=1, optreturn=True, mode=self.config.mode,
+                results = self.cerebro.run(maxcpus=1, optreturn=True, mode=self.config.mode, tradehistory=True,
                                            stdstats=self.config.stdstats,
                                            telegram_bot=self.config.telegram_bot, symbol=self.config.symbol,
                                            **self.config.kwargs)
 
             else:
-                results = self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot,
+                results = self.cerebro.run(mode=self.config.mode, telegram_bot=self.config.telegram_bot, tradehistory=True,
                                            stdstats=self.config.stdstats, symbol=self.config.symbol,
                                            **self.config.kwargs)
 

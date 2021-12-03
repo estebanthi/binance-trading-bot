@@ -12,7 +12,7 @@ class PercentGetter_analyzer(bt.Analyzer):
             Multiplier of percents. Default is 1. Put it to 100 to get percents in human-readable style
     """
 
-    params = (('multiplier', 1),)
+    params = (('multiplier', 100),)
 
     def __init__(self):
 
@@ -50,8 +50,6 @@ class PercentGetter_analyzer(bt.Analyzer):
                 'percent_gross': percent_gross,
                 'percent_net': percent_net
             })
-
-
 
     def get_percent_sum(self):
         """
@@ -159,6 +157,7 @@ class PercentGetter:
     """
     Get percents on the trade period
     Default name is "percent_getter"
+    Working fine only with one stake sizer
 
     """
     def __init__(self, multiplier=PercentGetter_analyzer.params.multiplier):
