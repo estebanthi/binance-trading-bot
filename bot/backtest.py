@@ -22,13 +22,14 @@ from models.Analyzers.PyFolio import PyFolio
 from models.Analyzers.StratQuality import StratQuality
 from models.Analyzers.TradeList import TradeList
 import ccxt
+import backtrader_plotting
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
 strategies = [StochMacdRsi()]
-analyzers = [TradeAnalyzer(), TradeList()]
+analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -50,6 +51,8 @@ config = EngineConfiguration(
     sizer=sizer,
     commission=0.075,
     exchange=ccxt.binance(),
+    use_mongo=False,
+    use_bokeh=True,
 )
 engine.set_configuration(config)
 
@@ -61,4 +64,3 @@ engine.plot()
 
 result_analyzer = ResultAnalyzer(result)
 result_analyzer.pretty_pnls()
-result_analyzer.print_trade_list()

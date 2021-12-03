@@ -10,6 +10,9 @@ import yaml
 import time
 from models.MongoDriver import MongoDriver
 
+import backtrader_plotting
+import backtrader_plotting.schemes
+
 
 def get_secrets(path='config.yml'):
     """
@@ -146,4 +149,9 @@ class Engine:
             self.cerebro.resampledata(datafeed, timeframe=timeframe[0], compression=timeframe[1])
 
     def plot(self):
-        self.cerebro.plot(style='candlestick', barup="green")
+        if self.config.use_bokeh:
+            b = backtrader_plotting.Bokeh(style="bar", plot_mode="single", scheme=backtrader_plotting.schemes.Tradimo())
+            self.cerebro.plot(b)
+        else:
+            scheme = {"style": 'candlestick', "barup": "green"}
+            self.cerebro.plot(**scheme)
