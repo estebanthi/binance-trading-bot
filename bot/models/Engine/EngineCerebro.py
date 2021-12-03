@@ -12,7 +12,10 @@ from backtrader import linebuffer
 from backtrader import indicator
 from backtrader.writer import WriterFile
 from backtrader.strategy import Strategy, SignalStrategy
-
+from backtrader.utils import tzparse
+from backtrader import observers
+from backtrader.utils.py3 import integer_types
+from backtrader.cerebro import OptReturn
 
 class EngineCerebro(bt.Cerebro):
     """
@@ -155,12 +158,12 @@ class EngineCerebro(bt.Cerebro):
             # let's skip process "spawning"
             with tqdm.auto.tqdm(total=self.counter, position=0, leave=True) as pbar:
                 for iterstrat in iterstrats:
-                    runstrat = self.runstrategies(iterstrat)
+                    runstrat = self.runstrategies(iterstrat, pbar)
                     self.runstrats.append(runstrat)
                     if self._dooptimize:
                         for cb in self.optcbs:
                             cb(runstrat)  # callback receives finished strategy
-                    pbar.update(1)
+
         else:
             if self.p.optdatas and self._dopreload and self._dorunonce:
                 for data in self.datas:
@@ -194,12 +197,183 @@ class EngineCerebro(bt.Cerebro):
         super().optstrategy(strategy, *args, **kwargs)
 
         # Then, whe count the number of strats
-        self.strats[0], iter = tee(self.strats[0])
         counter = 0
-        for strat in iter:
-            counter += 1
+        for i in range(len(self.strats)):
+            self.strats[i], iter = tee(self.strats[i])
+            for strat in iter:
+                counter += 1
         self.counter = counter
 
     def __init__(self):
         super().__init__()
         self.counter = 1
+
+    def runstrategies(self, iterstrat, pbar, predata=False):
+        '''
+        Internal method invoked by ``run``` to run a set of strategies
+        '''
+        self._init_stcount()
+
+        self.runningstrats = runstrats = list()
+        for store in self.stores:
+            store.start()
+
+        if self.p.cheat_on_open and self.p.broker_coo:
+            # try to activate in broker
+            if hasattr(self._broker, 'set_coo'):
+                self._broker.set_coo(True)
+
+        if self._fhistory is not None:
+            self._broker.set_fund_history(self._fhistory)
+
+        for orders, onotify in self._ohistory:
+            self._broker.add_order_history(orders, onotify)
+
+        self._broker.start()
+
+        for feed in self.feeds:
+            feed.start()
+
+        if self.writers_csv:
+            wheaders = list()
+            for data in self.datas:
+                if data.csv:
+                    wheaders.extend(data.getwriterheaders())
+
+            for writer in self.runwriters:
+                if writer.p.csv:
+                    writer.addheaders(wheaders)
+
+        # self._plotfillers = [list() for d in self.datas]
+        # self._plotfillers2 = [list() for d in self.datas]
+
+        if not predata:
+            for data in self.datas:
+                data.reset()
+                if self._exactbars < 1:  # datas can be full length
+                    data.extend(size=self.params.lookahead)
+                data._start()
+                if self._dopreload:
+                    data.preload()
+
+        for stratcls, sargs, skwargs in iterstrat:
+            sargs = self.datas + list(sargs)
+            try:
+                strat = stratcls(*sargs, **skwargs)
+            except bt.errors.StrategySkipError:
+                continue  # do not add strategy to the mix
+
+            if self.p.oldsync:
+                strat._oldsync = True  # tell strategy to use old clock update
+            if self.p.tradehistory:
+                strat.set_tradehistory()
+            runstrats.append(strat)
+            pbar.update(1)
+
+        tz = self.p.tz
+        if isinstance(tz, integer_types):
+            tz = self.datas[tz]._tz
+        else:
+            tz = tzparse(tz)
+
+        if runstrats:
+            # loop separated for clarity
+            defaultsizer = self.sizers.get(None, (None, None, None))
+            for idx, strat in enumerate(runstrats):
+                if self.p.stdstats:
+                    strat._addobserver(False, observers.Broker)
+                    if self.p.oldbuysell:
+                        strat._addobserver(True, observers.BuySell)
+                    else:
+                        strat._addobserver(True, observers.BuySell,
+                                           barplot=True)
+
+                    if self.p.oldtrades or len(self.datas) == 1:
+                        strat._addobserver(False, observers.Trades)
+                    else:
+                        strat._addobserver(False, observers.DataTrades)
+
+                for multi, obscls, obsargs, obskwargs in self.observers:
+                    strat._addobserver(multi, obscls, *obsargs, **obskwargs)
+
+                for indcls, indargs, indkwargs in self.indicators:
+                    strat._addindicator(indcls, *indargs, **indkwargs)
+
+                for ancls, anargs, ankwargs in self.analyzers:
+                    strat._addanalyzer(ancls, *anargs, **ankwargs)
+
+                sizer, sargs, skwargs = self.sizers.get(idx, defaultsizer)
+                if sizer is not None:
+                    strat._addsizer(sizer, *sargs, **skwargs)
+
+                strat._settz(tz)
+                strat._start()
+
+                for writer in self.runwriters:
+                    if writer.p.csv:
+                        writer.addheaders(strat.getwriterheaders())
+
+            if not predata:
+                for strat in runstrats:
+                    strat.qbuffer(self._exactbars, replaying=self._doreplay)
+
+            for writer in self.runwriters:
+                writer.start()
+
+            # Prepare timers
+            self._timers = []
+            self._timerscheat = []
+            for timer in self._pretimers:
+                # preprocess tzdata if needed
+                timer.start(self.datas[0])
+
+                if timer.params.cheat:
+                    self._timerscheat.append(timer)
+                else:
+                    self._timers.append(timer)
+
+            if self._dopreload and self._dorunonce:
+                if self.p.oldsync:
+                    self._runonce_old(runstrats)
+                else:
+                    self._runonce(runstrats)
+            else:
+                if self.p.oldsync:
+                    self._runnext_old(runstrats)
+                else:
+                    self._runnext(runstrats)
+
+            for strat in runstrats:
+                strat._stop()
+
+        self._broker.stop()
+
+        if not predata:
+            for data in self.datas:
+                data.stop()
+
+        for feed in self.feeds:
+            feed.stop()
+
+        for store in self.stores:
+            store.stop()
+
+        self.stop_writers(runstrats)
+
+        if self._dooptimize and self.p.optreturn:
+            # Results can be optimized
+            results = list()
+            for strat in runstrats:
+                for a in strat.analyzers:
+                    a.strategy = None
+                    a._parent = None
+                    for attrname in dir(a):
+                        if attrname.startswith('data'):
+                            setattr(a, attrname, None)
+
+                oreturn = OptReturn(strat.params, analyzers=strat.analyzers, strategycls=type(strat))
+                results.append(oreturn)
+
+            return results
+
+        return runstrats

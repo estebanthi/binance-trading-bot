@@ -12,6 +12,9 @@ from models.MongoDriver import MongoDriver
 
 
 def get_secrets(path='config.yml'):
+    """
+    Get api keys
+    """
     with open(path, 'r') as file:
         data = yaml.safe_load(file)
         return data['api_key'], data['api_secret']
@@ -126,7 +129,7 @@ class Engine:
                 'nonce': lambda: str(int(time.time() * 1000)),
                 'enableRateLimit': True,
             }
-            store = CCXTStore(exchange='binance', currency=self.config.currency, config=broker_config, retries=5,
+            store = CCXTStore(exchange=self.config.exchange.id, currency=self.config.currency, config=broker_config, retries=5,
                               debug=self.config.debug)
             broker = store.getbroker()
             self.cerebro.setbroker(broker)

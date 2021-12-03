@@ -14,6 +14,7 @@ from models.Timers.StopSession import StopSession as StopSession
 from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 from models.Sizers.PercentSizer import PercentSizer as PercentSizer
 from models.Strategies.BracketStrats.BollingerBandsDivergences import BollingerBandsDivergence as BollingerBandsDivergence
+import ccxt
 
 
 # To disable useless warnings
@@ -33,8 +34,9 @@ telegram_bot = TelegramBot()
 # Default path where is saved the file is data/backtesting_results
 write_to = "recap.txt"
 
-# Instantiate the engine
+# Instantiate the engine and the exchange
 engine = Engine()
+exchange = ccxt.binance()
 
 
 # Configure the engine
@@ -44,7 +46,7 @@ config = EngineConfiguration(
     timedelta=dt.timedelta(minutes=50),
     timeframe=bt.TimeFrame.Minutes,
     compression=240, strategies=strategies, debug=False, analyzers=analyzers, currency="EUR",
-    write_to=write_to, stdstats=True, observers=observers, sizer=sizer,
+    write_to=write_to, stdstats=True, observers=observers, sizer=sizer, exchange=exchange
 )
 engine.set_configuration(config)
 
