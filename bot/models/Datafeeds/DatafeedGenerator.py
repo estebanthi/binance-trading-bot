@@ -2,14 +2,12 @@ import backtrader as bt
 import os
 from models.Datafeeds.CustomOHLC import CustomOHLC as CustomOHLC
 import yaml
-from binance import Client
 import pandas as pd
 import datetime as dt
 from ccxtbt import CCXTStore
 import time
 from models.MongoDriver import MongoDriver as MongoDriver
 from backtrader.feeds.pandafeed import PandasData as PandasData
-import ccxt
 
 # Useful to format timeframe and compression
 timeframes_mapper = {
@@ -29,6 +27,7 @@ class DatafeedGenerator:
     def __init__(self, datafeed_params):
         self.p = datafeed_params
 
+        # Dates conversion
         if type(self.p.start_date) == str:
             self.p.start_date = dt.datetime.strptime(self.p.start_date, "%Y/%m/%d %H:%M:%S")
         if type(self.p.end_date) == str:
@@ -38,6 +37,9 @@ class DatafeedGenerator:
             self.p.start_date = self.p.end_date - self.p.timedelta
 
     def generate_datafeed(self):
+        """
+        Generate a datafeed
+        """
         return self.generate_backtesting_datafeed() if (self.p.mode == "BACKTEST" or self.p.mode == "OPTIMIZE") \
             else self.generate_live_datafeed()
 
@@ -50,7 +52,7 @@ class DatafeedGenerator:
         with open("config.yml", "r") as file:
             data = yaml.safe_load(file)
 
-        if data["mongo_url"]:  # If MongoDB is used
+        if data["mongo_url"] and self.p.use_mongo:  # If MongoDB is used
             mongo_driver = MongoDriver()
             mongo_driver.connect()
             if not mongo_driver.get_ticker(self.p.symbol, self.format_timeframe()):
@@ -121,12 +123,14 @@ class DatafeedGenerator:
 
         """
         exchange = self.p.exchange
-        timestamp = int(dt.datetime.timestamp(self.p.start_date)*1000)
+        timestamp = int(dt.datetime.timestamp(self.p.start_date) * 1000)  # Timestamp formatting in ms
+
         data = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=timestamp, limit=10000)
-        while data[-1][0] < dt.datetime.timestamp(self.p.end_date)*1000:
-            data2 = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=data[-1][0], limit=10000)
+        while data[-1][0] < dt.datetime.timestamp(self.p.end_date) * 1000:  # If more than 10 000 candles
+            data2 = exchange.fetch_ohlcv(self.p.symbol, timeframe=self.format_timeframe(), since=data[-1][0],
+                                         limit=10000)
             for i in range(len(data2)):
-                if i !=0:
+                if i != 0:
                     data.append(data2[i])
         for i in range(len(data)):
             data[i] = tuple(data[i])
@@ -164,6 +168,10 @@ def format_klines(klines):
 
 
 def epoch_to_datetime(epoch):
+    """
+    Convert epoch to datetime
+
+    """
     epoch /= 1000
     return dt.datetime.fromtimestamp(epoch)
 
@@ -174,9 +182,11 @@ def filter_historical(start, end, historical):
 
     """
     df = pd.DataFrame()
-    df = df.from_records(historical)
+    df = df.from_records(historical)    # df formatting
+
     after = df[df["Date"] >= start]
     before = df[df["Date"] <= end]
     between = after.merge(before)
+
     between.set_index(["Date"], inplace=True)
     return between

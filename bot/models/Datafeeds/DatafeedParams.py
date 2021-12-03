@@ -49,4 +49,5 @@ class DatafeedParams:
     start_date: dt.datetime or str = None
     timedelta: dt.timedelta = None
     debug: bool = False
-    exchange: ccxt.bitfinex or ccxt.binance = ccxt.bitfinex()
+    exchange: any = ccxt.bitfinex()
+    use_mongo: bool = True

@@ -82,7 +82,7 @@ class Engine:
                 with open("config.yml", "r") as file:
                     data = yaml.safe_load(file)
 
-                if data["mongo_url"]:  # If MongoDB is used
+                if data["mongo_url"] and self.config.use_mongo:  # If MongoDB is used
                     mongo_driver = MongoDriver()
                     mongo_driver.connect()
                     results_bytes = pickle.dumps(results)
@@ -108,7 +108,8 @@ class Engine:
                                          timeframe=self.config.timeframe,
                                          end_date=self.config.end_date, start_date=self.config.start_date,
                                          compression=self.config.compression, timedelta=self.config.timedelta,
-                                         debug=self.config.debug, exchange=self.config.exchange)
+                                         debug=self.config.debug, exchange=self.config.exchange,
+                                         use_mongo=self.config.use_mongo)
         datafeed_generator = DatafeedGenerator(datafeed_params)
         return datafeed_generator.generate_datafeed()
 

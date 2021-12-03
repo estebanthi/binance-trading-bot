@@ -3,7 +3,7 @@ import backtrader.feeds as btfeed
 
 class CustomOHLC(btfeed.GenericCSVData):
     """
-    A generic CSV class corresponding to extracted data from Binance API
+    A generic CSV class corresponding to extracted data from the bot
 
     """
 

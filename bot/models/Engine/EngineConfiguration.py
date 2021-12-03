@@ -33,4 +33,5 @@ class EngineConfiguration:
     telegram_bot: TelegramBot = None  # TelegramBot
     save_results: str = None  # Results filename if you want to save
     exchange: ccxt.bitfinex or ccxt.binance = ccxt.bitfinex()  # Exchange to use
+    use_mongo: bool = True  # To use or not to use Mongo DB
 
