@@ -4,16 +4,12 @@ import warnings
 from models.Engine.EngineConfiguration import EngineConfiguration as EngineConfiguration
 from models.Strategies.SimpleStrats.TripleEMA import TripleEMA as TripleEMA
 from models.Engine.Engine import Engine as Engine
-from models.Analyzers.ResultAnalyzer import ResultAnalyzer as ResultAnalyzer
 from models.Analyzers.TradeAnalyzer import TradeAnalyzer as TradeAnalyzer
-from models.Analyzers.PercentGetter import PercentGetter as PercentGetter
-from models.Strategies.BracketStrats.StochMacdRsi import StochMacdRsi as StochMacdRsi
 import datetime as dt
 from models.Observers.Value import Value as ValueObserver
 from models.Timers.StopSession import StopSession as StopSession
 from models.TelegramBot.TelegramBot import TelegramBot as TelegramBot
 from models.Sizers.PercentSizer import PercentSizer as PercentSizer
-from models.Strategies.BracketStrats.BollingerBandsDivergences import BollingerBandsDivergence as BollingerBandsDivergence
 import ccxt
 
 
@@ -22,7 +18,7 @@ warnings.filterwarnings("ignore")
 
 # Put here your trading components
 strategies = [TripleEMA(logging=True, recurring_recap=dt.timedelta(minutes=100))]
-analyzers = [TradeAnalyzer(), PercentGetter(multiplier=100)]
+analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 timers = [StopSession(when=dt.time(16))]
 sizer = PercentSizer(99)

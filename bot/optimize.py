@@ -7,9 +7,8 @@ import numpy as np
 from models.Engine.EngineConfiguration import EngineConfiguration as EngineConfiguration
 from models.Strategies.SimpleStrats.TripleEMA import TripleEMA as TripleEMA
 from models.Engine.Engine import Engine as Engine
-from models.Analyzers.ResultAnalyzer import ResultAnalyzer as ResultAnalyzer
+from models.Results.ResultsAnalyzer import ResultsAnalyzer
 from models.Analyzers.TradeAnalyzer import TradeAnalyzer as TradeAnalyzer
-from models.Analyzers.PercentGetter import PercentGetter as PercentGetter
 from models.Strategies.BracketStrats.StochMacdRsi import StochMacdRsi as StochMacdRsi
 import datetime as dt
 from models.Observers.Value import Value as ValueObserver

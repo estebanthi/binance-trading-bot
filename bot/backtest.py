@@ -4,9 +4,8 @@ import warnings
 from models.Engine.EngineConfiguration import EngineConfiguration as EngineConfiguration
 from models.Strategies.SimpleStrats.TripleEMA import TripleEMA as TripleEMA
 from models.Engine.Engine import Engine as Engine
-from models.Analyzers.ResultAnalyzer import ResultAnalyzer as ResultAnalyzer
+from models.Results.ResultsAnalyzer import ResultsAnalyzer
 from models.Analyzers.TradeAnalyzer import TradeAnalyzer as TradeAnalyzer
-from models.Analyzers.PercentGetter import PercentGetter as PercentGetter
 from models.Strategies.BracketStrats.StochMacdRsi import StochMacdRsi as StochMacdRsi
 import datetime as dt
 from models.Observers.Value import Value as ValueObserver
@@ -23,13 +22,14 @@ from models.Analyzers.StratQuality import StratQuality
 from models.Analyzers.TradeList import TradeList
 import ccxt
 import backtrader_plotting
+from models.Analyzers.FullMetrics import FullMetrics
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [StochMacdRsi()]
-analyzers = [TradeAnalyzer()]
+strategies = [PSAR_EMA()]
+analyzers = [FullMetrics()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -40,10 +40,10 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BNB/BTC",
-    start_date="2021/10/01 0:0:0",
+    start_date="2020/01/01 0:0:0",
     end_date="2021/11/01 0:0:0",
-    timeframe=bt.TimeFrame.Minutes,
-    compression=5,
+    timeframe=bt.TimeFrame.Days,
+    compression=1,
     strategies=strategies,
     analyzers=analyzers,
     stdstats=True,
@@ -60,7 +60,8 @@ engine.set_configuration(config)
 result = engine.run()
 
 # Charting
-engine.plot()
+"""engine.plot()"""
 
-result_analyzer = ResultAnalyzer(result)
-result_analyzer.pretty_pnls()
+result_analyzer = ResultsAnalyzer(result)
+
+result_analyzer.print_metrics()
