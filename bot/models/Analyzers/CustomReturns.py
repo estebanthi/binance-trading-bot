@@ -21,11 +21,11 @@ class CustomReturns_analyzer(bt.TimeFrameAnalyzerBase):
     def stop(self):
         self._value_end = self.strategy.broker.getvalue()
 
-        self.rtot = self._value_end / self._value_start * 100   # Total returns calculation
+        self.rtot = (self._value_end / self._value_start - 1) * 100   # Total returns calculation
         self.avg_ret = self.rtot / self._tcount                 # Average returns calculation
 
         self.ann_ret = 525_600 / (self.timeframes_mapper[self.timeframe] * self.compression) * self.avg_ret  # Annualization
-        self.log_ret = math.log(self.ann_ret / 100) * 100  # Log returns calculation
+        self.log_ret = math.log(abs(self.ann_ret) / 100) * 100  # Log returns calculation
 
     def get_analysis(self):
         """

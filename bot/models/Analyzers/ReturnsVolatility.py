@@ -19,7 +19,6 @@ class ReturnsVolatility_analyzer(bt.Analyzer):
             self.returns.append(pnlpcnt)
 
     def get_analysis(self):
-
         return {"volatility": math.sqrt(statistics.variance(self.returns))}
 
 

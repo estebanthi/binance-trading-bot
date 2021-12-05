@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from tabulate import tabulate
+from termcolor import colored
 
 class ResultsAnalyzer:
     """
@@ -127,6 +128,29 @@ class ResultsAnalyzer:
         metrics = self.result[0][0].analyzers.full_metrics.get_analysis()
         metrics_list = []
         for k, v in metrics.items():
+
+            if isinstance(v, float):
+                v = round(v, 2)
+
+            if k in "Annual returns, Average drawdown, Max drawdown, Returns volatility, Average return per trade, Average return per long, " \
+                    "Average return per short, Winrate".split(", "):
+                v = f"{v} %"
+
+            color = "white"
+            if k in "Annual returns, PNL net, Fees, Winrate".split(", "):
+                color = "green"
+            if k in "Average return per trade, Total trades, Total long, Total short, Open trades, Average return per long, Average return per short".split(", "):
+                color = "blue"
+            if k in "Time in market, Average trade len, Max trade len, Average won len, Average lost len".split(", "):
+                color = "magenta"
+            if k in "Average drawdown, Average drawdown length, Max drawdown, Max drawdown length".split(", "):
+                color = "red"
+            if k in "Annualized Sharpe ratio, Returns volatility".split(", "):
+                color = "yellow"
+            k, v = colored(k, color, attrs=["bold"]), colored(v, color)
+
+
+
             metrics_list.append([k, v])
 
         print(tabulate(metrics_list, tablefmt="grid"))
