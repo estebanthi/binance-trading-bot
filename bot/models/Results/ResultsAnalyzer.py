@@ -145,7 +145,7 @@ class ResultsAnalyzer:
                 color = "magenta"
             if k in "Average drawdown, Average drawdown length, Max drawdown, Max drawdown length".split(", "):
                 color = "red"
-            if k in "Annualized Sharpe ratio, Returns volatility".split(", "):
+            if k in "Annualized Sharpe ratio, Returns volatility, Calmar ratio".split(", "):
                 color = "yellow"
             k, v = colored(k, color, attrs=["bold"]), colored(v, color)
 
