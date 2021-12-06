@@ -23,13 +23,14 @@ from models.Analyzers.TradeList import TradeList
 import ccxt
 import backtrader_plotting
 from models.Analyzers.FullMetrics import FullMetrics
+from models.Strategies.BracketStrats.EMA_Scalping import EMA_Scalping
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [PSAR_EMA()]
-analyzers = [FullMetrics()]
+strategies = [EMA_Scalping(stop_loss=0.2, risk_reward_ratio=1.5)]
+analyzers = [TradeAnalyzer(), FullMetrics()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -40,9 +41,9 @@ engine = Engine()
 config = EngineConfiguration(
     mode="BACKTEST",
     symbol="BNB/BTC",
-    start_date="2020/01/01 0:0:0",
-    end_date="2021/11/01 0:0:0",
-    timeframe=bt.TimeFrame.Days,
+    start_date="2021/11/01 0:0:0",
+    end_date="2021/11/10 0:0:0",
+    timeframe=bt.TimeFrame.Minutes,
     compression=1,
     strategies=strategies,
     analyzers=analyzers,
