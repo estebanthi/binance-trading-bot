@@ -24,13 +24,15 @@ import ccxt
 import backtrader_plotting
 from models.Analyzers.FullMetrics import FullMetrics
 from models.Strategies.BracketStrats.EMA_Scalping import EMA_Scalping
+from models.Strategies.DummyStrat import DummyStrat
+from models.Strategies.BracketStrats.HeikinAshiScalp import HeikinAshiScalp
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [EMA_Scalping(stop_loss=0.2, risk_reward_ratio=1.5)]
-analyzers = [TradeAnalyzer(), FullMetrics()]
+strategies = [HeikinAshiScalp(stop_loss=0.5, risk_reward_ratio=1.5, logging=True)]
+analyzers = [FullMetrics(), TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
 
@@ -40,9 +42,9 @@ engine = Engine()
 # Configure the engine
 config = EngineConfiguration(
     mode="BACKTEST",
-    symbol="BNB/BTC",
-    start_date="2021/11/01 0:0:0",
-    end_date="2021/11/10 0:0:0",
+    symbol="BTC/EUR",
+    start_date="2021/12/03 0:0:0",
+    end_date="2021/12/05 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
     compression=1,
     strategies=strategies,
@@ -50,8 +52,8 @@ config = EngineConfiguration(
     stdstats=True,
     observers=observers,
     sizer=sizer,
-    commission=0.075,
-    exchange=ccxt.binance(),
+    commission=0.1,
+    exchange=ccxt.bitfinex(),
     use_mongo=False,
     use_bokeh=True,
 )

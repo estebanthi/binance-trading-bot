@@ -18,12 +18,14 @@ from models.Sizers.PercentSizer import PercentSizer as PercentSizer
 from models.Strategies.BracketStrats.BollingerBandsDivergences import \
     BollingerBandsDivergence as BollingerBandsDivergence
 from models.Strategies.BracketStrats.PSAR_EMA import PSAR_EMA as PSAR_EMA
+from models.Strategies.BracketStrats.EMA_Scalping import EMA_Scalping
+import ccxt
 
 # To disable useless warnings
 warnings.filterwarnings("ignore")
 
 # Put here your trading components
-strategies = [StochMacdRsi(), TripleEMA()]
+strategies = [EMA_Scalping(stop_loss=np.linspace(0.1, 0.5, 10), risk_reward_ratio=np.linspace(1.5, 3, 10))]
 analyzers = [TradeAnalyzer()]
 observers = [ValueObserver()]
 sizer = PercentSizer(99)
@@ -37,11 +39,11 @@ engine = Engine()
 # Configure the engine
 config = EngineConfiguration(
     mode="OPTIMIZE",
-    symbol="BTC/EUR",
+    symbol="BNB/BTC",
     start_date="2021/10/01 0:0:0",
-    end_date="2021/11/01 0:0:0",
+    end_date="2021/11/10 0:0:0",
     timeframe=bt.TimeFrame.Minutes,
-    compression=5,
+    compression=1,
     strategies=strategies,
     analyzers=analyzers,
     stdstats=True,
@@ -49,7 +51,9 @@ config = EngineConfiguration(
     sizer=sizer,
     telegram_bot=telegram_bot,
     save_results="multistrat.dat",
-    commission=0.075
+    commission=0.075,
+    use_mongo=False,
+    exchange=ccxt.binance(),
 )
 engine.set_configuration(config)
 

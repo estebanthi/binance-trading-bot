@@ -70,7 +70,7 @@ class EMA_Scalping_strat(BracketStratSkeleton):
         if self.fast_ema[0] > self.slow_ema[0] \
                 and self.has_met_first_hit \
                 and self.candles_since_first_hit <= 3 \
-                and self.datas[0].close[-1] < self.datas[0].close[1] \
+                and self.datas[0].close[0] > self.datas[0].close[-1] > self.datas[0].close[-2] \
                 and self.candle_pos[0] > -1:
             return True
         return False
@@ -79,7 +79,7 @@ class EMA_Scalping_strat(BracketStratSkeleton):
         if self.fast_ema[0] < self.slow_ema[0] \
                 and self.has_met_first_hit \
                 and self.candles_since_first_hit <= 3 \
-                and self.datas[0].close[-1] > self.datas[0].close[1] \
+                and self.datas[0].close[0] < self.datas[0].close[-1] < self.datas[0].close[-2] \
                 and self.candle_pos[0] < 1:
             return True
         return False
