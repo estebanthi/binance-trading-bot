@@ -1,5 +1,3 @@
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-
 ## Basic Overview
 
 Using crypto historical data, backtest your strategies, optimize the parameters and analyze the results. Once you found a promising strategy, automatically trade with it in live using Binance API. Be notified on Telegram about what's happening within the bot.
